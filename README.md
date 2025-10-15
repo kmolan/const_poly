@@ -16,5 +16,9 @@ See [CONTRIBUTIONS.md](./CONTRIBUTIONS.md)
 const_poly is licensed under the MIT license.
 
 ## Contact
-
 anmolkathail@gmail.com
+
+## TODO
+Make the function approximation cycles a configurable value
+improve approximations
+do not ignore doctests

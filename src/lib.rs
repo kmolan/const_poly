@@ -3,5 +3,4 @@
 pub mod const_poly;
 
 #[cfg(test)]
-#[macro_use]
-extern crate static_assertions;
+extern crate static_assertions; //for const_assert
