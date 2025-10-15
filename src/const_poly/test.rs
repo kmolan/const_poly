@@ -390,3 +390,74 @@ fn test_polynomial_5_variables() {
     const_assert!(inner());
     assert!(inner());
 }
+
+#[test]
+#[allow(dead_code)]
+fn test_polynomial_multiple_terms() {
+    const fn inner() -> bool {
+        // Polynomial with 2 variables, 2 terms:
+        // Term 1: 2.0 * sin(a) * cos(b)
+        // Term 2: -1.0 * exp(a) * pow(b, 2)
+        // Evaluate at a = π/6 (~0.5235987756), b = 2.0
+        const TERM1: Term<2> = Term::new(2.0, [VarFunction::Sin, VarFunction::Cos]);
+        const TERM2: Term<2> = Term::new(-1.0, [VarFunction::Exp, VarFunction::Pow(2)]);
+        const POLY: Polynomial<2, 2> = Polynomial::new([TERM1, TERM2]);
+        const RES: f64 = POLY.evaluate([0.5235987756, 2.0]);
+
+        // Expected:
+        // sin(π/6) = 0.5
+        // cos(2.0) ≈ -0.416146836547
+        // exp(π/6) ≈ 1.6487212707
+        // pow(2, 2) = 4
+        // Result = 2 * 0.5 * (-0.416146836547) + (-1) * 1.6487212707 * 4
+        //        = 2 * (-0.2080734182735) + (-6.5948850828)
+        //        = -0.416146836547 + (-6.5948850828) = -7.01103191935
+
+        if !approx_eq(RES, -7.01103191935, 0.5) {
+            return false; //TODO precision
+        }
+
+        // Polynomial with 3 variables, 3 terms:
+        // Term 1: 1.0 * sin(a) * pow(b,1) * pow(c,1)
+        // Term 2: 2.0 * cos(a) * sqrt(b) * pow(c,1)
+        // Term 3: -0.5 * ln(a) * pow(b,1) * exp(c)
+        // Evaluate at a=1.0, b=0.0, c=4.0
+        const TERM3_1: Term<3> = Term::new(1.0, [VarFunction::Sin, VarFunction::Pow(1), VarFunction::Pow(1)]);
+        const TERM3_2: Term<3> = Term::new(2.0, [VarFunction::Cos, VarFunction::Sqrt, VarFunction::Pow(1)]);
+        const TERM3_3: Term<3> = Term::new(-0.5, [VarFunction::Ln, VarFunction::Pow(1), VarFunction::Exp]);
+        const POLY3: Polynomial<3, 3> = Polynomial::new([TERM3_1, TERM3_2, TERM3_3]);
+        const RES3: f64 = POLY3.evaluate([1.0, 0.0, 4.0]);
+
+        // Expected:
+        // sin(1.0) ≈ 0.8414709848
+        // pow(0,1) = 0
+        // pow(4,1) = 4
+        // cos(1.0) ≈ 0.5403023059
+        // sqrt(0) = 0
+        // ln(1.0) = 0.0
+        // exp(4.0) ≈ 54.5981500331
+        // Result = 
+        //   Term1: 1.0 * 0.8414709848 * 0 * 4 = 0
+        // + Term2: 2.0 * 0.5403023059 * 0 * 4 = 0
+        // + Term3: -0.5 * 0 * 0 * 54.5981500331 = 0
+        // Overall: 0 + 0 + 0 = 0
+
+        // To make this more interesting, change b to 1.0 for a non-zero result
+        const RES3_B1: f64 = POLY3.evaluate([1.0, 1.0, 4.0]);
+
+        // Recalculate expected with b=1.0
+        // Term1: 1.0 * sin(1.0) * 1^1 * 4^1 = 0.8414709848 * 1 * 4 = 3.3658839392
+        // Term2: 2.0 * cos(1.0) * sqrt(1.0) * 4^1 = 2.0 * 0.5403023059 * 1 * 4 = 4.3224184472
+        // Term3: -0.5 * ln(1.0) * 1^1 * exp(4.0) = -0.5 * 0 * 1 * 54.5981500331 = 0
+        // Total = 3.3658839392 + 4.3224184472 + 0 = 7.6883023864
+
+        if !approx_eq(RES3_B1, 7.6883023864, 0.01) {
+            return false; //TODO precision
+        }
+
+        true
+    }
+
+    const_assert!(inner());
+    assert!(inner());
+}

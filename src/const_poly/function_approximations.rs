@@ -1,5 +1,6 @@
 /// Mathematical constant π (pi)
-const PI: f64 = 3.14159265358979323846264338327950288;
+#[allow(clippy::approx_constant)]
+const PI: f64 = 3.141_592_653_589_793;
 
 /// Mathematical constant 2π (two times pi)
 const TWO_PI: f64 = 2.0 * PI;
@@ -27,10 +28,10 @@ const fn abs(x: f64) -> f64 {
 /// The angle reduced to [-π, π].
 const fn reduce_angle(mut x: f64) -> f64 {
     while x > PI {
-        x = x - TWO_PI;
+        x -= TWO_PI;
     }
     while x < -PI {
-        x = x + TWO_PI;
+        x += TWO_PI;
     }
     x
 }
@@ -44,10 +45,10 @@ const fn reduce_angle(mut x: f64) -> f64 {
 /// The angle reduced to [-π/2, π/2].
 const fn reduce_angle_half_pi(mut x: f64) -> f64 {
     while x > HALF_PI {
-        x = x - PI;
+        x -= PI;
     }
     while x < -HALF_PI {
-        x = x + PI;
+        x += PI;
     }
     x
 }
@@ -191,6 +192,7 @@ pub const fn static_powi(mut base: f64, mut exp: u32) -> f64 {
 ///
 /// # Returns
 /// Approximate value of ln(x).
+#[allow(clippy::approx_constant)]
 pub const fn ln_approx(x: f64) -> f64 {
     if x <= 0.0 {
         return f64::NAN;

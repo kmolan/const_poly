@@ -24,5 +24,7 @@ anmolkathail@gmail.com
 -  do not ignore doctests
 -  better tests
 -  polynomial operations like add/multiply ?
+-  test_polynomial_multiple_terms precision?
+-  friendly macros
 
 
