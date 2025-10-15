@@ -422,9 +422,18 @@ fn test_polynomial_multiple_terms() {
         // Term 2: 2.0 * cos(a) * sqrt(b) * pow(c,1)
         // Term 3: -0.5 * ln(a) * pow(b,1) * exp(c)
         // Evaluate at a=1.0, b=0.0, c=4.0
-        const TERM3_1: Term<3> = Term::new(1.0, [VarFunction::Sin, VarFunction::Pow(1), VarFunction::Pow(1)]);
-        const TERM3_2: Term<3> = Term::new(2.0, [VarFunction::Cos, VarFunction::Sqrt, VarFunction::Pow(1)]);
-        const TERM3_3: Term<3> = Term::new(-0.5, [VarFunction::Ln, VarFunction::Pow(1), VarFunction::Exp]);
+        const TERM3_1: Term<3> = Term::new(
+            1.0,
+            [VarFunction::Sin, VarFunction::Pow(1), VarFunction::Pow(1)],
+        );
+        const TERM3_2: Term<3> = Term::new(
+            2.0,
+            [VarFunction::Cos, VarFunction::Sqrt, VarFunction::Pow(1)],
+        );
+        const TERM3_3: Term<3> = Term::new(
+            -0.5,
+            [VarFunction::Ln, VarFunction::Pow(1), VarFunction::Exp],
+        );
         const POLY3: Polynomial<3, 3> = Polynomial::new([TERM3_1, TERM3_2, TERM3_3]);
         const RES3: f64 = POLY3.evaluate([1.0, 0.0, 4.0]);
 
@@ -436,7 +445,7 @@ fn test_polynomial_multiple_terms() {
         // sqrt(0) = 0
         // ln(1.0) = 0.0
         // exp(4.0) ≈ 54.5981500331
-        // Result = 
+        // Result =
         //   Term1: 1.0 * 0.8414709848 * 0 * 4 = 0
         // + Term2: 2.0 * 0.5403023059 * 0 * 4 = 0
         // + Term3: -0.5 * 0 * 0 * 54.5981500331 = 0
