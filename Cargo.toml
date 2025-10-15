@@ -1,0 +1,19 @@
+[package]
+name = "const_poly"
+version = "0.0.1"
+authors = ["akathail <anmolkathail@gmail.com>"]
+edition = "2024"
+description = "Compile time evaluation for multivariable polynomials in rust"
+repository = "https://github.com/kmolan/const_poly"
+license = "MIT"
+readme = "README.md"
+#documentation = TODO
+keywords = ["Math", "Science", "polynomial", "compile-time"]
+
+[badges]
+maintenance = { status = "actively-developed" }
+
+[dev-dependencies]
+static_assertions = "1.1.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
