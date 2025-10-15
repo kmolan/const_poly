@@ -7,7 +7,7 @@ fn main() {
 //TODO: only do this for this crate's contents?
 fn run_cargo_fmt() {
     let status = Command::new("cargo")
-        .args(&["fmt"])
+        .args(["fmt"])
         .status()
         .expect("Failed to run cargo fmt");
 
