@@ -1,4 +1,4 @@
-use crate::function_approximations;
+use const_poly::function_approximations;
 use static_assertions::const_assert;
 
 const fn approx_eq(a: f64, b: f64, epsilon: f64) -> bool {
