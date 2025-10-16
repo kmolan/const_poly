@@ -19,7 +19,6 @@ const_poly is licensed under the MIT license.
 anmolkathail@gmail.com
 
 ## TODO
--  Make the function approximation cycles a configurable value
 -  for each test use a different max error
 -  do not ignore doctests
 -  polynomial operations like add/multiply ?

@@ -1,6 +1,31 @@
+// === Internal configuration constants ===
+
 const PI: f64 = core::f64::consts::PI;
 const HALF_PI: f64 = core::f64::consts::FRAC_PI_2;
 const TWO_PI: f64 = 2.0 * PI;
+
+/// Threshold below which `cos(x)` is considered effectively zero in `tan_approx()`.
+/// This is done to prevent division by near-zero and approximate asymptotic behavior near ±π/2.
+const TAN_INFINITY_CUTOFF: f64 = 1e-12;
+
+/// Returned as an approximate positive infinity by `tan_approx()` when the cosine is
+/// too close to zero and sine is positive.
+const TAN_POS_INFINITY: f64 = 1e12;
+
+/// Returned as an approximate negative infinity by `tan_approx()` when the cosine is
+/// too close to zero and sine is negative.
+const TAN_NEG_INFINITY: f64 = -1e12;
+
+// Newton-Raphson iteration count for sqrt
+const SQRT_NR_ITERATIONS: usize = 20;
+
+// Taylor expansion term counts
+const ATAN_TAYLOR_TERMS: usize = 30;
+const SINH_TAYLOR_TERMS: usize = 30;
+const COSH_TAYLOR_TERMS: usize = 30;
+const LN_SERIES_TERMS: usize = 39;
+
+// ========================================
 
 /// Computes the absolute value of a floating-point number.
 const fn abs(x: f64) -> f64 {
@@ -31,7 +56,7 @@ const fn reduce_angle_for_sine(mut x: f64) -> f64 {
 ///
 /// sin(x) ≈ x - x³/3! + x⁵/5! - x⁷/7! + x⁹/9! - x¹¹/11! + x¹³/13!
 ///
-/// Accurate to within **1e-9** compared to [`f64::sin()`] over the range [-2π, 2π].
+/// Accurate to within **1e-9** compared to f64::sin() over the range [-2π, 2π].
 pub const fn sin_approx(x: f64) -> f64 {
     let x = reduce_angle_for_sine(x);
     let x2 = x * x;
@@ -81,7 +106,7 @@ const fn reduce_angle_for_cos(mut x: f64) -> (f64, f64) {
 ///
 /// cos(x) ≈ 1 - x²/2! + x⁴/4! - x⁶/6! + x⁸/8! - x¹⁰/10! + x¹²/12! - x¹⁴/14!
 ///
-/// Accurate to within **1e-9** compared to [`f64::cos()`] over the range [-2π, 2π].
+/// Accurate to within **1e-9** compared to f64::cos() over the range [-2π, 2π].
 pub const fn cos_approx(x: f64) -> f64 {
     let (x, sign) = reduce_angle_for_cos(x);
     let x2 = x * x;
@@ -121,7 +146,7 @@ const fn round_const(x: f64) -> f64 {
 ///
 /// Special case: returns 1.0 if `x` is 0.
 ///
-/// Accurate to within **1e-9** absolute error threshold compared to [`f64::exp()`] over the range [-10`, 10].
+/// Accurate to within **1e-9** absolute error threshold compared to f64::exp() over the range [-10`, 10].
 pub const fn exp_approx(x: f64) -> f64 {
     const LN_2: f64 = core::f64::consts::LN_2;
 
@@ -189,16 +214,16 @@ pub const fn exp_approx(x: f64) -> f64 {
 /// If cosine is near zero, returns a large positive or negative number
 /// to approximate asymptotic behavior.
 ///
-/// Accurate to within **1e-7** compared to [`f64::tan()`] over the range [-2π, 2π], excluding ±π/2 and
+/// Accurate to within **1e-7** compared to f64::tan() over the range [-2π, 2π], excluding ±π/2 and
 /// other vertical asymptotes.
 pub const fn tan_approx(x: f64) -> f64 {
     let cos_val = cos_approx(x);
 
-    if abs(cos_val) < 1e-12 {
+    if abs(cos_val) < TAN_INFINITY_CUTOFF {
         if sin_approx(x) > 0.0 {
-            return 1e12; // large positive approximation of +∞
+            return TAN_POS_INFINITY; // large positive approximation of +∞
         } else {
-            return -1e12; // large negative approximation of -∞
+            return TAN_NEG_INFINITY; // large negative approximation of -∞
         }
     }
 
@@ -232,7 +257,7 @@ pub const fn static_powi(mut base: f64, exp: i32) -> f64 {
 ///
 /// Returns NaN for non-positive inputs.
 ///
-/// Accurate to within **1e-15** compared to [`f64::ln()`].
+/// Accurate to within **1e-15** compared to f64::ln().
 #[allow(clippy::approx_constant)]
 pub const fn ln_approx(number: f64) -> f64 {
     // Invalid input (non-positive)
@@ -261,7 +286,7 @@ pub const fn ln_approx(number: f64) -> f64 {
     let mut term = z;
     let mut i = 1;
 
-    while i <= 39 {
+    while i <= LN_SERIES_TERMS {
         sum += term / (2 * i - 1) as f64;
         term *= z2;
         i += 1;
@@ -277,7 +302,7 @@ pub const fn ln_approx(number: f64) -> f64 {
 ///
 /// Returns NaN for negative inputs.
 ///
-/// Accurate to within **1e-10** compared to [`f64::sqrt()`].
+/// Accurate to within **1e-10** compared to f64::sqrt().
 pub const fn sqrt_approx(x: f64) -> f64 {
     // Invalid input (non-positive)
     if x < 0.0 {
@@ -292,8 +317,8 @@ pub const fn sqrt_approx(x: f64) -> f64 {
     let mut guess = if x < 1.0 { x } else { x / 2.0 };
     let mut i = 0;
 
-    // Perform 20 iterations of Newton's method
-    while i < 20 {
+    // Perform Newton's method iterations
+    while i < SQRT_NR_ITERATIONS {
         guess = 0.5 * (guess + x / guess);
         i += 1;
     }
@@ -303,7 +328,7 @@ pub const fn sqrt_approx(x: f64) -> f64 {
 
 /// Approximates the arctangent of `x` (in radians) using Taylor series.
 ///
-/// Accurate to within **1e-15** compared to [`f64::atan()`].
+/// Accurate to within **1e-15** compared to f64::atan().
 pub const fn arctan_approx(x: f64) -> f64 {
     // Range reduction for large |x|
     if x > 1.0 {
@@ -329,7 +354,7 @@ pub const fn arctan_approx(x: f64) -> f64 {
     let mut i = 1;
 
     // Taylor series expansion around 0
-    while i < 30 {
+    while i < ATAN_TAYLOR_TERMS {
         term *= -x2;
         sum += term / (2 * i + 1) as f64;
         i += 1;
@@ -340,13 +365,13 @@ pub const fn arctan_approx(x: f64) -> f64 {
 
 /// Approximates the hyperbolic sine sinh(x) using Taylor series expansion.
 ///
-/// Accurate to within **1e-10** compared to [`f64::sinh()`].
+/// Accurate to within **1e-10** compared to f64::sinh().
 pub const fn sinh_approx(x: f64) -> f64 {
     let mut term = x;
     let mut sum = x;
     let mut i = 1;
 
-    while i < 30 {
+    while i < SINH_TAYLOR_TERMS {
         term *= x * x / ((2 * i) as f64 * (2 * i + 1) as f64);
         sum += term;
         i += 1;
@@ -356,18 +381,12 @@ pub const fn sinh_approx(x: f64) -> f64 {
 }
 
 /// Approximates the hyperbolic cosine cosh(x) using Taylor series expansion.
-///
-/// # Parameters
-/// - `x`: Input value.
-///
-/// # Returns
-/// Approximate value of cosh(x).
 pub const fn cosh_approx(x: f64) -> f64 {
     let mut term = 1.0;
     let mut sum = 1.0;
     let mut i = 1;
 
-    while i < 30 {
+    while i < COSH_TAYLOR_TERMS {
         term *= x * x / ((2 * i - 1) as f64 * (2 * i) as f64);
         sum += term;
         i += 1;
