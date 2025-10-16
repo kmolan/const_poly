@@ -20,7 +20,7 @@ use crate::const_poly::function_approximations::*;
 #[derive(Clone, Copy)]
 pub enum VarFunction {
     Identity, // x
-    Pow(u32), // x^n
+    Pow(i32), // x^n
     Sin,      // sin(x)
     Cos,      // cos(x)
     Tan,      // tan(x)

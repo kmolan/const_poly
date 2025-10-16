@@ -20,11 +20,9 @@ anmolkathail@gmail.com
 
 ## TODO
 -  Make the function approximation cycles a configurable value
--  improve approximations
+-  for each test use a different max error
 -  do not ignore doctests
--  better tests
 -  polynomial operations like add/multiply ?
--  test_polynomial_multiple_terms precision?
 -  friendly macros
 
 
