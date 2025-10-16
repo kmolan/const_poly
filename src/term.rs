@@ -1,4 +1,4 @@
-use crate::const_poly::function_approximations::*;
+use crate::function_approximations::*;
 
 /// Enum representing the mathematical function applied to a variable in a term.
 ///

@@ -1,5 +1,5 @@
-use const_poly::const_poly::polynomial::Polynomial;
-use const_poly::const_poly::term::{Term, VarFunction};
+use const_poly::polynomial::Polynomial;
+use const_poly::term::{Term, VarFunction};
 
 // Helper to print assertion info
 fn assert_approx_eq_with_debug(a: f64, b: f64, tol: f64, label: &str) {

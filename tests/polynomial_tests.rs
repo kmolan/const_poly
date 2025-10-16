@@ -1,5 +1,5 @@
-use const_poly::const_poly::polynomial::Polynomial;
-use const_poly::const_poly::term::{Term, VarFunction};
+use const_poly::polynomial::Polynomial;
+use const_poly::term::{Term, VarFunction};
 use static_assertions::const_assert;
 
 const fn approx_eq(a: f64, b: f64, epsilon: f64) -> bool {

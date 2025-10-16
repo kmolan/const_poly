@@ -1,4 +1,4 @@
-use crate::const_poly::term::Term;
+use crate::term::Term;
 
 /// Represents a polynomial with a fixed number of variables and terms.
 ///
