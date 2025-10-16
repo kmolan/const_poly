@@ -1,31 +1,15 @@
-# Benchmarks for Polynomial Term Evaluations
+# Accuracy for compile time polynomial evaluations
 
-| Polynomial                                              | Approximation Error            | Notes                                                   |
-|---------------------------------------------------------|-------------------------------|---------------------------------------------------------|
-| 3 * sin(a)                                              | < 1e-6                        | Single-variable sin term                                |
-| 2 * sin(a) * sin(b)                                     | < 1e-6                        | Two-variable sin term                                   |
-| sin(a) * sin(b) * sin(c)                                | < 1e-6                        | Three-variable sin term                                 |
-| 5 * cos(a)                                              | < 1e-6                        | Single-variable cos term                                |
-| 2 * cos(a) * cos(b)                                     | < 1e-6                        | Two-variable cos term                                   |
-| cos(a) * cos(b) * cos(c)                                | < 1e-6                        | Three-variable cos term                                 |
-| 1.5 * exp(a)                                           | < 1e-6                        | Single-variable exponential term                        |
-| 2 * exp(a) * exp(b)                                     | < 1e-6                        | Two-variable exponential term                           |
-| 3 * tan(a)                                              | < 1e-6                        | Single-variable tan term                                |
-| 2 * tan(a) * tan(b)                                     | < 1e-6                        | Two-variable tan term                                   |
-| 2^3                                                    | < 1e-6                        | Static power function (single variable)                 |
-| 3 * (a^1) * (b^2)                                       | < 1e-6                        | Static power function (two variables)                   |
-| sqrt(a)                                                | < 1e-6                        | Single-variable sqrt term                               |
-| 2 * sqrt(a)                                            | < 1e-6                        | Single-variable sqrt term with zero input              |
-| sinh(a)                                                | < 1e-6                        | Single-variable hyperbolic sine term                    |
-| 2 * sinh(a)                                            | < 1e-6                        | Single-variable hyperbolic sine term with coefficient  |
-| cosh(a)                                                | < 1e-6                        | Single-variable hyperbolic cosine term                  |
-| 3 * cosh(a)                                            | < 1e-6                        | Single-variable hyperbolic cosine term with coefficient|
-| 2*sin(a) - cos(a) + 3*(a^2)                            | < 1e-6                        | Polynomial with 1 variable and mixed functions          |
-| 1.2 * sin(a) * cos(b)                                  | < 1e-6                        | Polynomial with 2 variables                              |
-| -0.5 * exp(a) * sqrt(b) * ln(c)                        | < 1e-6                        | Polynomial with 3 variables and mixed functions          |
-| 3 * tan(a) * sinh(b) * cosh(c) * arctan(d)             | < 1e-6                        | Polynomial with 4 variables                              |
-| -1 * (a^2) * exp(b) * sin(c) * cosh(d) * ln(e)         | < 1e-6                        | Polynomial with 5 variables                              |
+| Polynomial Equation | Accuracy |
+|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
+| `1.2 * x² * y⁻¹ * z⁰ +` <br> `-0.8 * x³ * y¹ * z⁻² +` <br> `2.5 * x⁻³ * y⁴ * z¹ +` <br> `-1.1 * x⁰ * y⁻² * z³ +` <br> `0.9 * x¹ * y² * z⁻¹` | 1e-9     |
+| <br> `1.5 * sin(x₀) * x₁ * x₂² +` <br> `-2.0 * cos(x₀) * x₁³ * x₂ +` <br> `0.5 * exp(x₀) * ln(x₁) * sqrt(x₂)` | 1e-10 | 
+| <br> `3.0 * x₀ * sin(x₁) * x₂² * cos(x₃) +` <br> `-1.2 * x₀³ * tan(x₁) * exp(x₂) * x₃ +` <br> `0.7 * ln(x₀) * sqrt(x₁) * atan(x₂) * sinh(x₃) +` <br> `1.1 * cosh(x₀) * x₁ * x₂ * sin(x₃)` | 1e-7  | 
+| <br> `2.0 * sin(x₀) * cos(x₁) * x₂² * x₃ * ln(x₄) +` <br> `-3.3 * exp(x₀) * x₁³ * tan(x₂) * sqrt(x₃) * x₄ +` <br> `1.7 * atan(x₀) * sinh(x₁) * cosh(x₂) * x₃ * x₄ +` <br> `0.9 * x₀ * x₁ * x₂ * x₃ * x₄ +` <br> `-0.5 * x₀ * x₁ * x₂ * x₃ * x₄` | 1e-12 |
+| <br> `1.1 * cos(x₀) * exp(x₁) * x₂ * ln(x₃) * sqrt(x₄) +` <br> `-2.2 * x₀² * sin(x₁) * x₂ * cosh(x₃) * x₄³ +` <br> `0.8 * tan(x₀) * atan(x₁) * sinh(x₂) * x₃² * x₄ +` <br> `-0.7 * x₀ * ln(x₁) * cos(x₂) * x₃ * exp(x₄) +` <br> `1.5 * x₀ * x₁ * x₂ * x₃ * x₄` | 1e-10 |
+| <br> `-1.3 * sinh(x₀) * x₁³ * x₂ * ln(x₃) * cos(x₄) +` <br> `2.4 * exp(x₀) * x₁ * sin(x₂) * cosh(x₃) * x₄² +` <br> `-0.9 * atan(x₀) * x₁ * x₂² * tan(x₃) * sqrt(x₄) +` <br> `1.0 * x₀ * x₁ * x₂ * x₃ * x₄ +` <br> `-0.6 * x₀ * cos(x₁) * exp(x₂) * x₃³ * sin(x₄)` | 1e-7 |
+| <br> `2.2 * x₀ * sqrt(x₁) * ln(x₂) * sin(x₃) * exp(x₄) +` <br> `-1.8 * x₀³ * cos(x₁) * x₂ * tan(x₃) * x₄² +` <br> `1.3 * cosh(x₀) * x₁ * x₂ * atan(x₃) * x₄ +` <br> `-0.4 * x₀ * x₁² * sinh(x₂) * x₃³ * cos(x₄) +` <br> `0.7 * x₀ * x₁ * x₂ * x₃ * x₄` | 1e-8 |
 
----
+----------------------------
 
-**All approximations passed within the epsilon tolerance of 1e-6.**
+**Note:** Lowest accuracy out of all evaluations is 1e-7 (0.0000001).

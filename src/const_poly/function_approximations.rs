@@ -123,7 +123,7 @@ const fn round_const(x: f64) -> f64 {
 ///
 /// Accurate to within **1e-9** absolute error threshold compared to [`f64::exp()`] over the range [-10`, 10].
 pub const fn exp_approx(x: f64) -> f64 {
-    const LN_2: f64 = 0.6931471805599453;
+    const LN_2: f64 = core::f64::consts::LN_2;
 
     if x == 0.0 {
         return 1.0;
@@ -191,7 +191,6 @@ pub const fn exp_approx(x: f64) -> f64 {
 ///
 /// Accurate to within **1e-7** compared to [`f64::tan()`] over the range [-2π, 2π], excluding ±π/2 and
 /// other vertical asymptotes.
-
 pub const fn tan_approx(x: f64) -> f64 {
     let cos_val = cos_approx(x);
 
