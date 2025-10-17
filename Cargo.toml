@@ -3,12 +3,12 @@ name = "const_poly"
 version = "0.0.1"
 authors = ["akathail <anmolkathail@gmail.com>"]
 edition = "2024"
-description = "Compile time evaluation for multivariable polynomials in rust"
+description = "Evaluate any multivariable equation or polynomial at compile time with high accuracy and zero runtime overhead."
 repository = "https://github.com/kmolan/const_poly"
 license = "MIT"
 readme = "README.md"
 #documentation = TODO
-keywords = ["Math", "Science", "polynomial", "compile-time"]
+keywords = ["compile-time", "polynomial", "math", "symbolic", "metaprogramming"]
 
 [badges]
 maintenance = { status = "actively-developed" }
