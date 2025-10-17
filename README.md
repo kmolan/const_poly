@@ -1,8 +1,4 @@
-```text
-┏┓┏┓┳┓┏┓┏┳┓ ┏┓┏┓┓ ┓┏
-┃ ┃┃┃┃┗┓ ┃  ┃┃┃┃┃ ┗┫
-┗┛┗┛┛┗┗┛ ┻ ━┣┛┗┛┗┛┗┛
-```
+![Logo](images/ascii-art-text.png)
 
 <!-- [![On crates.io](https://img.shields.io/crates/v/multicalc.svg)](https://crates.io/crates/multicalc)
 ![Downloads](https://img.shields.io/crates/d/multicalc?style=flat-square) -->
