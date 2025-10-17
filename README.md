@@ -20,8 +20,6 @@ anmolkathail@gmail.com
 
 ## TODO
 -  for each test use a different max error
--  do not ignore doctests
 -  polynomial operations like add/multiply ?
--  friendly macros
 
 

@@ -13,15 +13,12 @@ use crate::term::Term;
 ///
 /// # Example
 ///
-/// ```ignore
-/// use crate::const_poly::term::{Term, VarFunction};
-/// use crate::const_poly::polynomial::Polynomial;
+/// ```
+/// use const_poly::VarFunction::*;
+/// use const_poly::{const_poly, Polynomial};
 ///
-/// // Define a term 3 * sin(x) * cos(y)
-/// const TERM1: Term<2> = Term::new(3.0, [VarFunction::Sin, VarFunction::Cos]);
-///
-/// // Create a polynomial with a single term
-/// const POLY: Polynomial<2, 1> = Polynomial::new([TERM1]);
+/// // Create a polynomial, f(x,y) = 3 * sin(x) * cos(y)
+/// const POLY: Polynomial<2, 1> = const_poly!({[3.0, [Sin, Cos]]});
 ///
 /// // Evaluate at x = π/2, y = 0 => 3 * sin(π/2) * cos(0) = 3 * 1 * 1 = 3
 /// let result = POLY.evaluate([1.57079632679, 0.0]);
@@ -44,12 +41,13 @@ impl<const N: usize, const M: usize> Polynomial<N, M> {
     ///
     /// # Example
     ///
-    /// ```ignore
-    /// const TERMS: [Term<2>; 2] = [
-    ///     Term::new(1.0, [VarFunction::Identity, VarFunction::Identity]),
-    ///     Term::new(2.0, [VarFunction::Sin, VarFunction::Cos]),
-    /// ];
-    /// const POLY: Polynomial<2, 2> = Polynomial::new(TERMS);
+    /// ```
+    /// use const_poly::VarFunction::*;
+    /// use const_poly::{const_poly, Polynomial};
+    /// 
+    /// //define polynomial f(x,y) = x*y + 2*Sin(x)*Sin(y)
+    /// const POLY: Polynomial<2, 2> = const_poly!({[1.0, [Identity, Identity]], 
+    ///                                             [2.0, [Sin,      Cos]]});
     /// ```
     pub const fn new(terms: [Term<N>; M]) -> Self {
         Self { terms }
@@ -66,12 +64,6 @@ impl<const N: usize, const M: usize> Polynomial<N, M> {
     /// # Returns
     ///
     /// The floating-point result of evaluating the polynomial.
-    ///
-    /// # Example
-    ///
-    /// ```ignore
-    /// let result = poly.evaluate([x_value, y_value, ...]);
-    /// ```
     pub const fn evaluate(&self, vars: [f64; N]) -> f64 {
         let mut sum = 0.0;
         let mut i = 0;

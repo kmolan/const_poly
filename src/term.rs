@@ -38,8 +38,9 @@ pub enum VarFunction {
 /// applied to a corresponding variable in the input.
 ///
 /// For example, for `N = 2`:
-/// ```ignore
-/// Term::new(3.0, [VarFunction::Sin, VarFunction::Pow(2)])
+/// ```
+/// use const_poly::{Term, VarFunction::*};
+/// const TERM: Term<2> = Term::new(3.0, [Sin, Pow(2)]);
 /// ```
 /// represents the term `3 * sin(x_0) * (x_1)^2`.
 #[derive(Copy, Clone)]
@@ -62,10 +63,11 @@ impl<const N: usize> Term<N> {
     ///
     /// # Example
     ///
-    /// ```ignore
-    /// # use crate::const_poly::term::{Term, VarFunction};
-    /// let term = Term::<2>::new(2.0, [VarFunction::Sin, VarFunction::Pow(3)]);
     /// ```
+    /// use const_poly::{Term, VarFunction::*};
+    /// const TERM: Term<2> = Term::new(2.0, [Sin, Pow(3)]);
+    /// ```
+    /// represents the term `2.0 * sin(x_0) * (x_1)^3`.
     pub const fn new(coefficient: f64, functions: [VarFunction; N]) -> Self {
         Self {
             coeff: coefficient,
@@ -88,11 +90,10 @@ impl<const N: usize> Term<N> {
     ///
     /// # Example
     ///
-    /// ```ignore
-    /// # use crate::const_poly::term::{Term, VarFunction};
-    /// # use crate::const_poly::function_approximations::*;
-    /// let term = Term::<1>::new(2.0, [VarFunction::Sin]);
-    /// let val = term.evaluate([1.57079632679]); // Approx sin(pi/2)
+    /// ```
+    /// use const_poly::{Term, VarFunction::*};
+    /// const TERM: Term<1> = Term::new(2.0, [Sin]);
+    /// const val: f64 = TERM.evaluate([1.57079632679]); // Approx sin(pi/2)
     /// assert!((val - 2.0).abs() < 1e-6);
     /// ```
     pub const fn evaluate(&self, vars: [f64; N]) -> f64 {

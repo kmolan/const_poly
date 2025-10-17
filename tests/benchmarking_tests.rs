@@ -1,5 +1,5 @@
-use const_poly::polynomial::Polynomial;
-use const_poly::term::{Term, VarFunction};
+use const_poly::VarFunction::*;
+use const_poly::{const_poly, Polynomial};
 
 // Helper to print assertion info
 fn assert_approx_eq_with_debug(a: f64, b: f64, tol: f64, label: &str) {
@@ -14,273 +14,77 @@ fn assert_approx_eq_with_debug(a: f64, b: f64, tol: f64, label: &str) {
 
 #[test]
 fn benchmarking_tests() {
-    // 3 variables, 3 terms
-    const POLY_3V_3T: Polynomial<3, 3> = Polynomial::new([
-        Term::new(
-            1.5,
-            [VarFunction::Sin, VarFunction::Identity, VarFunction::Pow(2)],
-        ),
-        Term::new(
-            -2.0,
-            [VarFunction::Cos, VarFunction::Pow(3), VarFunction::Identity],
-        ),
-        Term::new(0.5, [VarFunction::Exp, VarFunction::Ln, VarFunction::Sqrt]),
-    ]);
+    // (1.5 * sin(x₀) * x₁ * x₂²) +
+    // (-2.0 * cos(x₀) * x₁³ * x₂) +
+    // (0.5 * exp(x₀) * ln(x₁) * sqrt(x₂))
+    const POLY_3V_3T: Polynomial<3, 3> = const_poly!({
+        [1.5, [Sin, Identity, Pow(2)]],
+        [-2.0, [Cos, Pow(3), Identity]],
+        [0.5, [Exp, Ln, Sqrt]]
+    });
 
-    // 4 variables, 4 terms
-    const POLY_4V_4T: Polynomial<4, 4> = Polynomial::new([
-        Term::new(
-            3.0,
-            [
-                VarFunction::Identity,
-                VarFunction::Sin,
-                VarFunction::Pow(2),
-                VarFunction::Cos,
-            ],
-        ),
-        Term::new(
-            -1.2,
-            [
-                VarFunction::Pow(3),
-                VarFunction::Tan,
-                VarFunction::Exp,
-                VarFunction::Identity,
-            ],
-        ),
-        Term::new(
-            0.7,
-            [
-                VarFunction::Ln,
-                VarFunction::Sqrt,
-                VarFunction::Arctan,
-                VarFunction::Sinh,
-            ],
-        ),
-        Term::new(
-            1.1,
-            [
-                VarFunction::Cosh,
-                VarFunction::Identity,
-                VarFunction::Pow(1),
-                VarFunction::Sin,
-            ],
-        ),
-    ]);
+    // (3.0 * x₀ * sin(x₁) * x₂² * cos(x₃)) +
+    // (-1.2 * x₀³ * tan(x₁) * exp(x₂) * x₃) +
+    // (0.7 * ln(x₀) * sqrt(x₁) * atan(x₂) * sinh(x₃)) +
+    // (1.1 * cosh(x₀) * x₁ * x₂ * sin(x₃))
+    const POLY_4V_4T: Polynomial<4, 4> = const_poly!({
+        [3.0, [Identity, Sin, Pow(2), Cos]],
+        [-1.2, [Pow(3), Tan, Exp, Identity]],
+        [0.7, [Ln, Sqrt, Arctan, Sinh]],
+        [1.1, [Cosh, Identity, Pow(1), Sin]]
+    });
 
-    // 5 variables, 5 terms
-    const POLY_5V_5T: Polynomial<5, 5> = Polynomial::new([
-        Term::new(
-            2.0,
-            [
-                VarFunction::Sin,
-                VarFunction::Cos,
-                VarFunction::Pow(2),
-                VarFunction::Identity,
-                VarFunction::Ln,
-            ],
-        ),
-        Term::new(
-            -3.3,
-            [
-                VarFunction::Exp,
-                VarFunction::Pow(3),
-                VarFunction::Tan,
-                VarFunction::Sqrt,
-                VarFunction::Identity,
-            ],
-        ),
-        Term::new(
-            1.7,
-            [
-                VarFunction::Arctan,
-                VarFunction::Sinh,
-                VarFunction::Cosh,
-                VarFunction::Identity,
-                VarFunction::Pow(1),
-            ],
-        ),
-        Term::new(
-            0.9,
-            [
-                VarFunction::Identity,
-                VarFunction::Identity,
-                VarFunction::Identity,
-                VarFunction::Identity,
-                VarFunction::Identity,
-            ],
-        ),
-        Term::new(
-            -0.5,
-            [
-                VarFunction::Pow(1),
-                VarFunction::Pow(1),
-                VarFunction::Pow(1),
-                VarFunction::Pow(1),
-                VarFunction::Pow(1),
-            ],
-        ),
-    ]);
+    // (2.0 * sin(x₀) * cos(x₁) * x₂² * x₃ * ln(x₄)) +
+    // (-3.3 * exp(x₀) * x₁³ * tan(x₂) * sqrt(x₃) * x₄) +
+    // (1.7 * atan(x₀) * sinh(x₁) * cosh(x₂) * x₃ * x₄) +
+    // (0.9 * x₀ * x₁ * x₂ * x₃ * x₄) +
+    // (-0.5 * x₀ * x₁ * x₂ * x₃ * x₄)
+    const POLY_5V_5T: Polynomial<5, 5> = const_poly!({
+        [2.0, [Sin, Cos, Pow(2), Identity, Ln]],
+        [-3.3, [Exp, Pow(3), Tan, Sqrt, Identity]],
+        [1.7, [Arctan, Sinh, Cosh, Identity, Pow(1)]],
+        [0.9, [Identity, Identity, Identity, Identity, Identity]],
+        [-0.5, [Pow(1), Pow(1), Pow(1), Pow(1), Pow(1)]]
+    });
 
-    const POLY_5V_5T_2: Polynomial<5, 5> = Polynomial::new([
-        Term::new(
-            1.1,
-            [
-                VarFunction::Cos,
-                VarFunction::Exp,
-                VarFunction::Pow(1),
-                VarFunction::Ln,
-                VarFunction::Sqrt,
-            ],
-        ),
-        Term::new(
-            -2.2,
-            [
-                VarFunction::Pow(2),
-                VarFunction::Sin,
-                VarFunction::Identity,
-                VarFunction::Cosh,
-                VarFunction::Pow(3),
-            ],
-        ),
-        Term::new(
-            0.8,
-            [
-                VarFunction::Tan,
-                VarFunction::Arctan,
-                VarFunction::Sinh,
-                VarFunction::Pow(2),
-                VarFunction::Identity,
-            ],
-        ),
-        Term::new(
-            -0.7,
-            [
-                VarFunction::Identity,
-                VarFunction::Ln,
-                VarFunction::Cos,
-                VarFunction::Pow(1),
-                VarFunction::Exp,
-            ],
-        ),
-        Term::new(
-            1.5,
-            [
-                VarFunction::Pow(1),
-                VarFunction::Pow(1),
-                VarFunction::Pow(1),
-                VarFunction::Pow(1),
-                VarFunction::Pow(1),
-            ],
-        ),
-    ]);
+    // (1.1 * cos(x₀) * exp(x₁) * x₂ * ln(x₃) * sqrt(x₄)) +
+    // (-2.2 * x₀² * sin(x₁) * x₂ * cosh(x₃) * x₄³) +
+    // (0.8 * tan(x₀) * atan(x₁) * sinh(x₂) * x₃² * x₄) +
+    // (-0.7 * x₀ * ln(x₁) * cos(x₂) * x₃ * exp(x₄)) +
+    // (1.5 * x₀ * x₁ * x₂ * x₃ * x₄)
+    const POLY_5V_5T_2: Polynomial<5, 5> = const_poly!({
+        [1.1, [Cos, Exp, Pow(1), Ln, Sqrt]],
+        [-2.2, [Pow(2), Sin, Identity, Cosh, Pow(3)]],
+        [0.8, [Tan, Arctan, Sinh, Pow(2), Identity]],
+        [-0.7, [Identity, Ln, Cos, Pow(1), Exp]],
+        [1.5, [Pow(1), Pow(1), Pow(1), Pow(1), Pow(1)]]
+    });
 
-    // Additional POLY_5V_5T #2
-    const POLY_5V_5T_3: Polynomial<5, 5> = Polynomial::new([
-        Term::new(
-            -1.3,
-            [
-                VarFunction::Sinh,
-                VarFunction::Pow(3),
-                VarFunction::Identity,
-                VarFunction::Ln,
-                VarFunction::Cos,
-            ],
-        ),
-        Term::new(
-            2.4,
-            [
-                VarFunction::Exp,
-                VarFunction::Pow(1),
-                VarFunction::Sin,
-                VarFunction::Cosh,
-                VarFunction::Pow(2),
-            ],
-        ),
-        Term::new(
-            -0.9,
-            [
-                VarFunction::Arctan,
-                VarFunction::Identity,
-                VarFunction::Pow(2),
-                VarFunction::Tan,
-                VarFunction::Sqrt,
-            ],
-        ),
-        Term::new(
-            1.0,
-            [
-                VarFunction::Pow(1),
-                VarFunction::Pow(1),
-                VarFunction::Pow(1),
-                VarFunction::Pow(1),
-                VarFunction::Pow(1),
-            ],
-        ),
-        Term::new(
-            -0.6,
-            [
-                VarFunction::Identity,
-                VarFunction::Cos,
-                VarFunction::Exp,
-                VarFunction::Pow(3),
-                VarFunction::Sin,
-            ],
-        ),
-    ]);
+    // (-1.3 * sinh(x₀) * x₁³ * x₂ * ln(x₃) * cos(x₄)) +
+    // (2.4 * exp(x₀) * x₁ * sin(x₂) * cosh(x₃) * x₄²) +
+    // (-0.9 * atan(x₀) * x₁ * x₂² * tan(x₃) * sqrt(x₄)) +
+    // (1.0 * x₀ * x₁ * x₂ * x₃ * x₄) +
+    // (-0.6 * x₀ * cos(x₁) * exp(x₂) * x₃³ * sin(x₄))
+    const POLY_5V_5T_3: Polynomial<5, 5> = const_poly!({
+        [-1.3, [Sinh, Pow(3), Identity, Ln, Cos]],
+        [2.4, [Exp, Pow(1), Sin, Cosh, Pow(2)]],
+        [-0.9, [Arctan, Identity, Pow(2), Tan, Sqrt]],
+        [1.0, [Pow(1), Pow(1), Pow(1), Pow(1), Pow(1)]],
+        [-0.6, [Identity, Cos, Exp, Pow(3), Sin]]
+    });
 
-    // Additional POLY_5V_5T #3
-    const POLY_5V_5T_4: Polynomial<5, 5> = Polynomial::new([
-        Term::new(
-            2.2,
-            [
-                VarFunction::Pow(1),
-                VarFunction::Sqrt,
-                VarFunction::Ln,
-                VarFunction::Sin,
-                VarFunction::Exp,
-            ],
-        ),
-        Term::new(
-            -1.8,
-            [
-                VarFunction::Pow(3),
-                VarFunction::Cos,
-                VarFunction::Identity,
-                VarFunction::Tan,
-                VarFunction::Pow(2),
-            ],
-        ),
-        Term::new(
-            1.3,
-            [
-                VarFunction::Cosh,
-                VarFunction::Pow(1),
-                VarFunction::Pow(1),
-                VarFunction::Arctan,
-                VarFunction::Pow(1),
-            ],
-        ),
-        Term::new(
-            -0.4,
-            [
-                VarFunction::Identity,
-                VarFunction::Pow(2),
-                VarFunction::Sinh,
-                VarFunction::Pow(3),
-                VarFunction::Cos,
-            ],
-        ),
-        Term::new(
-            0.7,
-            [
-                VarFunction::Pow(1),
-                VarFunction::Pow(1),
-                VarFunction::Pow(1),
-                VarFunction::Pow(1),
-                VarFunction::Pow(1),
-            ],
-        ),
-    ]);
+    // (2.2 * x₀ * sqrt(x₁) * ln(x₂) * sin(x₃) * exp(x₄)) +
+    // (-1.8 * x₀³ * cos(x₁) * x₂ * tan(x₃) * x₄²) +
+    // (1.3 * cosh(x₀) * x₁ * x₂ * atan(x₃) * x₄) +
+    // (-0.4 * x₀ * x₁² * sinh(x₂) * x₃³ * cos(x₄)) +
+    // (0.7 * x₀ * x₁ * x₂ * x₃ * x₄)
+    const POLY_5V_5T_4: Polynomial<5, 5> = const_poly!({
+        [2.2, [Pow(1), Sqrt, Ln, Sin, Exp]],
+        [-1.8, [Pow(3), Cos, Identity, Tan, Pow(2)]],
+        [1.3, [Cosh, Pow(1), Pow(1), Arctan, Pow(1)]],
+        [-0.4, [Identity, Pow(2), Sinh, Pow(3), Cos]],
+        [0.7, [Pow(1), Pow(1), Pow(1), Pow(1), Pow(1)]]
+    });
 
     // --- Test 1: 3 variables, 3 terms ---
     let vars_3 = [1.0_f64, 2.0, 3.0];
