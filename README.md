@@ -1,4 +1,9 @@
-# const_poly
+```text
+┏┓┏┓┳┓┏┓┏┳┓ ┏┓┏┓┓ ┓┏
+┃ ┃┃┃┃┗┓ ┃  ┃┃┃┃┃ ┗┫
+┗┛┗┛┛┗┗┛ ┻ ━┣┛┗┛┗┛┗┛
+```
+
 <!-- [![On crates.io](https://img.shields.io/crates/v/multicalc.svg)](https://crates.io/crates/multicalc)
 ![Downloads](https://img.shields.io/crates/d/multicalc?style=flat-square) -->
 ![github](https://github.com/kmolan/const_poly/actions/workflows/build-tests.yml/badge.svg)
@@ -109,4 +114,5 @@ If you use this library in your project, a shoutout or mention would be awesome!
 
 ## TODO
 -  Add polynomial operations like add/subtract/multiply.
+
 -  Add more benchmarking.
