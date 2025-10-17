@@ -32,24 +32,24 @@ pub enum VarFunction {
     Cosh,     // cosh(x)
 }
 
-/// Represents a single term in a polynomial with N variables.
+/// Represents a single term in a polynomial with NUM_VARIABLES variables.
 ///
 /// A term consists of a coefficient and an array of `VarFunction`s, each
 /// applied to a corresponding variable in the input.
 ///
-/// For example, for `N = 2`:
+/// For example, for `NUM_VARIABLES = 2`:
 /// ```
 /// use const_poly::{Term, VarFunction::*};
 /// const TERM: Term<2> = Term::new(3.0, [Sin, Pow(2)]);
 /// ```
 /// represents the term `3 * sin(x_0) * (x_1)^2`.
 #[derive(Copy, Clone)]
-pub struct Term<const N: usize> {
+pub struct Term<const NUM_VARIABLES: usize> {
     coeff: f64,
-    functions: [VarFunction; N],
+    functions: [VarFunction; NUM_VARIABLES],
 }
 
-impl<const N: usize> Term<N> {
+impl<const NUM_VARIABLES: usize> Term<NUM_VARIABLES> {
     /// Creates a new `Term` with the specified coefficient and functions.
     ///
     /// # Parameters
@@ -68,7 +68,7 @@ impl<const N: usize> Term<N> {
     /// const TERM: Term<2> = Term::new(2.0, [Sin, Pow(3)]);
     /// ```
     /// represents the term `2.0 * sin(x_0) * (x_1)^3`.
-    pub const fn new(coefficient: f64, functions: [VarFunction; N]) -> Self {
+    pub const fn new(coefficient: f64, functions: [VarFunction; NUM_VARIABLES]) -> Self {
         Self {
             coeff: coefficient,
             functions,
@@ -82,7 +82,7 @@ impl<const N: usize> Term<N> {
     ///
     /// # Parameters
     ///
-    /// - `vars`: An array of variables of length `N`.
+    /// - `vars`: An array of variables of length `NUM_VARIABLES`.
     ///
     /// # Returns
     ///
@@ -96,11 +96,11 @@ impl<const N: usize> Term<N> {
     /// const val: f64 = TERM.evaluate([1.57079632679]); // Approx sin(pi/2)
     /// assert!((val - 2.0).abs() < 1e-6);
     /// ```
-    pub const fn evaluate(&self, vars: [f64; N]) -> f64 {
+    pub const fn evaluate(&self, vars: [f64; NUM_VARIABLES]) -> f64 {
         let mut result = self.coeff;
         let mut i = 0;
 
-        while i < N {
+        while i < NUM_VARIABLES {
             let value = match self.functions[i] {
                 VarFunction::Identity => vars[i],
                 VarFunction::Pow(exp) => static_powi(vars[i], exp),
