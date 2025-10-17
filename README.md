@@ -1,7 +1,5 @@
-![Logo](images/ascii-art-text.png)
-
-<!-- [![On crates.io](https://img.shields.io/crates/v/multicalc.svg)](https://crates.io/crates/multicalc)
-![Downloads](https://img.shields.io/crates/d/multicalc?style=flat-square) -->
+[![On crates.io](https://img.shields.io/crates/v/const_poly.svg)](https://crates.io/crates/const_poly)
+![Downloads](https://img.shields.io/crates/d/const_poly?style=flat-square)
 ![github](https://github.com/kmolan/const_poly/actions/workflows/build-tests.yml/badge.svg)
 ![github](https://github.com/kmolan/const_poly/actions/workflows/code-coverage.yml/badge.svg)
 
@@ -112,3 +110,4 @@ If you use this library in your project, a shoutout or mention would be awesome!
 -  Add polynomial operations like add/subtract/multiply.
 
 -  Add more benchmarking.
+
