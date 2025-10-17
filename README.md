@@ -107,7 +107,9 @@ anmolkathail@gmail.com
 If you use this library in your project, a shoutout or mention would be awesome!
 
 ## TODO
+-  tutorials
 -  Add polynomial operations like add/subtract/multiply.
-
+-  Easier to use macros
+-  String representation
 -  Add more benchmarking.
 
