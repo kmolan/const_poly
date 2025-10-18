@@ -22,6 +22,16 @@ macro_rules! terms {
 /// Macro that expands to a `Polynomial<N, M>` expression with inferred type.
 #[macro_export]
 macro_rules! const_poly {
+    // Single term form
+    ( [ $coeff:expr, [ $( $func:expr ),* $(,)? ] ] ) => {{
+        const __N: usize = $crate::count_exprs!( $( $func ),* );
+        const __M: usize = 1;
+        $crate::polynomial::Polynomial::<__N, __M>::new([
+            $crate::term::Term::new($coeff, [ $( $func ),* ])
+        ])
+    }};
+
+    // Multi-term form
     ({
         $( [ $coeff:expr, [ $( $func:expr ),* $(,)? ] ] ),* $(,)?
     }) => {{
@@ -36,3 +46,4 @@ macro_rules! const_poly {
         })
     }};
 }
+
