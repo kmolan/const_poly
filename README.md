@@ -30,67 +30,47 @@ Evaluate any multivariable equation or polynomial at compile time with high accu
 
  - Metaprogramming and symbolic math tools that benefit from evaluating complex expressions entirely at compile time.
 
-## Examples
+## Installation
 
-### Simple Sine Polynomial (1 variable, 1 term):
-```rust
-use const_poly::{const_poly, Polynomial};
-use const_poly::VarFunction::Sin;
+Add the crate to your project:
 
-const POLY_1V_1T: Polynomial<1, 1> = const_poly!({
-    [2.0, [Sin]]  // 2 * sin(x)
-});
-
-const VARS: [f64; 1] = [1.2]; // sin(1.2) ≈ 0.932039
-const RESULT: f64 = POLY_1V_1T.evaluate(VARS); // ≈ 1.864078
-``` 
-
-### Mixed Trigonometric Polynomial (2 Variables, 2 terms):
-```rust
-use const_poly::{const_poly, Polynomial};
-use const_poly::VarFunction::{Cos, Sin};
-
-const POLY_2V_2T: Polynomial<2, 2> = const_poly!({
-    [1.0, [Sin, Cos]],  // sin(x) * cos(y)
-    [0.75, [Cos, Sin]]  // 0.75 * cos(x) * sin(y)
-});
-
-const VARS: [f64; 2] = [0.9, 1.1];
-const RESULT: f64 = POLY_2V_2T.evaluate(VARS);  // ~ 0.7705881
-``` 
-
-### Powers with Mixed Exponents (3 Variables, 5 terms):
-```rust
-use const_poly::{const_poly, Polynomial};
-use const_poly::VarFunction::Pow;
-
-const POLY_3V_5T: Polynomial<3, 5> = const_poly!({
-        [1.2, [Pow(2), Pow(-1), Pow(0)]],  // 1.2 * x² * y⁻¹ * z⁰
-        [-0.8, [Pow(3), Pow(1), Pow(-2)]], // -0.8 * x³ * y¹ * z⁻²
-        [2.5, [Pow(-3), Pow(4), Pow(1)]],  // 2.5 * x⁻³ * y⁴ * z¹
-        [-1.1, [Pow(0), Pow(-2), Pow(3)]], // -1.1 * x⁰ * y⁻² * z³
-        [0.9, [Pow(1), Pow(2), Pow(-1)]]   // 0.9 * x¹ * y² * z⁻¹
-    });
-
-const VARS: [f64; 3] = [2.0, 3.0, 0.5];
-const RESULT: f64 = POLY_3V_5T.evaluate(VARS); //~ -30.159027778
+```bash
+cargo add const_poly
 ```
 
-### Powers with mixed exponents, trignometric and log functions (4 variables, 4 terms):
+or manually in your `Cargo.toml`:
+
+```toml
+[dependencies]
+const_poly = "0.0.3"
+```
+
+## Quick Start Example
+
 ```rust
-use const_poly::{const_poly, Polynomial};
 use const_poly::VarFunction::*;
+use const_poly::{Polynomial, const_poly};
 
-const POLY_4V_4T: Polynomial<4, 4> = const_poly!({
-        [3.0, [Identity, Sin, Pow(2), Cos]],  // 3.0 * x₀ * sin(x₁) * x₂² * cos(x₃)
-        [-1.2, [Pow(3), Tan, Exp, Identity]], // -1.2 * x₀³ * tan(x₁) * exp(x₂) * x₃
-        [0.7, [Ln, Sqrt, Arctan, Sinh]],      // 0.7 * ln(x₀) * sqrt(x₁) * atan(x₂) * sinh(x₃)
-        [1.1, [Cosh, Identity, Pow(1), Sin]]  // 1.1 * cosh(x₀) * x₁ * x₂ * sin(x₃)
-    });
+// Define f(x,y) = 2.5⋅x²y³
+const POLY = Polynomial<2, 1> = const_poly!([2.5, Pow(2), Pow(3)]);
 
-const VARS = [0.5, 1.5, 2.5, 3.5];
-const RESULT = POLY_4V_4T.evaluate(VARS); // ~ -112.280027300776
+// Evaluate f(x,y) at (x,y)=(10.0, -5.0)
+const RESULT: f64 = POLY_1.evaluate([10.0, -5.0]); // -31250
+
+// Multi-term polynomial g(x,y,z)
+const POLY_3V_5T: Polynomial<3, 5> = const_poly!({
+    [1.2, Pow(2), Pow(-1), Pow(0)],  // 1.2 * x² * y⁻¹ * z⁰
+    [-0.8, Pow(3), Pow(1), Pow(-2)], // -0.8 * x³ * y¹ * z⁻²
+    [2.5, Pow(-3), Pow(4), Pow(1)],  // 2.5 * x⁻³ * y⁴ * z¹
+    [-1.1, Pow(0), Pow(-2), Pow(3)], // -1.1 * x⁰ * y⁻² * z³
+    [0.9, Pow(1), Pow(2), Pow(-1)]   // 0.9 * x¹ * y² * z⁻¹
+});
+
+const VARS: [f64; 3] = [2.0, 3.0, 0.5]; // (x,y,z)=(2.0,3.0,0.5)
+const RES: f64 = POLY_3V_5T.evaluate(VARS); // -30.159027778
 ```
+## Tutorials
+Follow the full tutorial at [TUTORIAL.md](./TUTORIAL.md)
 
 ## Benchmarks
 See [BENCHMARKS.md](./BENCHMARKS.md)
@@ -107,9 +87,7 @@ anmolkathail@gmail.com
 If you use this library in your project, a shoutout or mention would be awesome!
 
 ## TODO
--  tutorials
 -  Add polynomial operations like add/subtract/multiply.
--  Easier to use macros
--  String representation
+-  String representation for the polynomial.
 -  Add more benchmarking.
 
