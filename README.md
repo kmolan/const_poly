@@ -70,13 +70,13 @@ const VARS: [f64; 3] = [2.0, 3.0, 0.5]; // (x,y,z)=(2.0,3.0,0.5)
 const RES: f64 = POLY_3V_5T.evaluate(VARS); // -30.159027778
 ```
 ## Tutorials
-Follow the full tutorial at [TUTORIAL.md](./TUTORIAL.md)
+Follow the full tutorial at [TUTORIAL.md](https://github.com/kmolan/const_poly/blob/main/TUTORIAL.md)
 
 ## Benchmarks
-See [BENCHMARKS.md](./BENCHMARKS.md)
+See [BENCHMARKS.md](https://github.com/kmolan/const_poly/blob/main/BENCHMARKS.md)
 
 ## Contributions Guide
-See [CONTRIBUTIONS.md](./CONTRIBUTIONS.md)
+See [CONTRIBUTIONS.md](https://github.com/kmolan/const_poly/blob/main/CONTRIBUTIONS.md)
 
 ## LICENSE
 const_poly is licensed under the MIT license.
