@@ -18,9 +18,9 @@ fn benchmarking_tests() {
     // (-2.0 * cos(x₀) * x₁³ * x₂) +
     // (0.5 * exp(x₀) * ln(x₁) * sqrt(x₂))
     const POLY_3V_3T: Polynomial<3, 3> = const_poly!({
-        [1.5, [Sin, Identity, Pow(2)]],
-        [-2.0, [Cos, Pow(3), Identity]],
-        [0.5, [Exp, Ln, Sqrt]]
+        [1.5, Sin, Identity, Pow(2)],
+        [-2.0, Cos, Pow(3), Identity],
+        [0.5, Exp, Ln, Sqrt]
     });
 
     // (3.0 * x₀ * sin(x₁) * x₂² * cos(x₃)) +
@@ -28,10 +28,10 @@ fn benchmarking_tests() {
     // (0.7 * ln(x₀) * sqrt(x₁) * atan(x₂) * sinh(x₃)) +
     // (1.1 * cosh(x₀) * x₁ * x₂ * sin(x₃))
     const POLY_4V_4T: Polynomial<4, 4> = const_poly!({
-        [3.0, [Identity, Sin, Pow(2), Cos]],
-        [-1.2, [Pow(3), Tan, Exp, Identity]],
-        [0.7, [Ln, Sqrt, Arctan, Sinh]],
-        [1.1, [Cosh, Identity, Pow(1), Sin]]
+        [3.0, Identity, Sin, Pow(2), Cos],
+        [-1.2, Pow(3), Tan, Exp, Identity],
+        [0.7, Ln, Sqrt, Arctan, Sinh],
+        [1.1, Cosh, Identity, Pow(1), Sin]
     });
 
     // (2.0 * sin(x₀) * cos(x₁) * x₂² * x₃ * ln(x₄)) +
@@ -40,11 +40,11 @@ fn benchmarking_tests() {
     // (0.9 * x₀ * x₁ * x₂ * x₃ * x₄) +
     // (-0.5 * x₀ * x₁ * x₂ * x₃ * x₄)
     const POLY_5V_5T: Polynomial<5, 5> = const_poly!({
-        [2.0, [Sin, Cos, Pow(2), Identity, Ln]],
-        [-3.3, [Exp, Pow(3), Tan, Sqrt, Identity]],
-        [1.7, [Arctan, Sinh, Cosh, Identity, Pow(1)]],
-        [0.9, [Identity, Identity, Identity, Identity, Identity]],
-        [-0.5, [Pow(1), Pow(1), Pow(1), Pow(1), Pow(1)]]
+        [2.0, Sin, Cos, Pow(2), Identity, Ln],
+        [-3.3, Exp, Pow(3), Tan, Sqrt, Identity],
+        [1.7, Arctan, Sinh, Cosh, Identity, Pow(1)],
+        [0.9, Identity, Identity, Identity, Identity, Identity],
+        [-0.5, Pow(1), Pow(1), Pow(1), Pow(1), Pow(1)]
     });
 
     // (1.1 * cos(x₀) * exp(x₁) * x₂ * ln(x₃) * sqrt(x₄)) +
@@ -53,11 +53,11 @@ fn benchmarking_tests() {
     // (-0.7 * x₀ * ln(x₁) * cos(x₂) * x₃ * exp(x₄)) +
     // (1.5 * x₀ * x₁ * x₂ * x₃ * x₄)
     const POLY_5V_5T_2: Polynomial<5, 5> = const_poly!({
-        [1.1, [Cos, Exp, Pow(1), Ln, Sqrt]],
-        [-2.2, [Pow(2), Sin, Identity, Cosh, Pow(3)]],
-        [0.8, [Tan, Arctan, Sinh, Pow(2), Identity]],
-        [-0.7, [Identity, Ln, Cos, Pow(1), Exp]],
-        [1.5, [Pow(1), Pow(1), Pow(1), Pow(1), Pow(1)]]
+        [1.1, Cos, Exp, Pow(1), Ln, Sqrt],
+        [-2.2, Pow(2), Sin, Identity, Cosh, Pow(3)],
+        [0.8, Tan, Arctan, Sinh, Pow(2), Identity],
+        [-0.7, Identity, Ln, Cos, Pow(1), Exp],
+        [1.5, Pow(1), Pow(1), Pow(1), Pow(1), Pow(1)]
     });
 
     // (-1.3 * sinh(x₀) * x₁³ * x₂ * ln(x₃) * cos(x₄)) +
@@ -66,11 +66,11 @@ fn benchmarking_tests() {
     // (1.0 * x₀ * x₁ * x₂ * x₃ * x₄) +
     // (-0.6 * x₀ * cos(x₁) * exp(x₂) * x₃³ * sin(x₄))
     const POLY_5V_5T_3: Polynomial<5, 5> = const_poly!({
-        [-1.3, [Sinh, Pow(3), Identity, Ln, Cos]],
-        [2.4, [Exp, Pow(1), Sin, Cosh, Pow(2)]],
-        [-0.9, [Arctan, Identity, Pow(2), Tan, Sqrt]],
-        [1.0, [Pow(1), Pow(1), Pow(1), Pow(1), Pow(1)]],
-        [-0.6, [Identity, Cos, Exp, Pow(3), Sin]]
+        [-1.3, Sinh, Pow(3), Identity, Ln, Cos],
+        [2.4, Exp, Pow(1), Sin, Cosh, Pow(2)],
+        [-0.9, Arctan, Identity, Pow(2), Tan, Sqrt],
+        [1.0, Pow(1), Pow(1), Pow(1), Pow(1), Pow(1)],
+        [-0.6, Identity, Cos, Exp, Pow(3), Sin]
     });
 
     // (2.2 * x₀ * sqrt(x₁) * ln(x₂) * sin(x₃) * exp(x₄)) +
@@ -79,11 +79,11 @@ fn benchmarking_tests() {
     // (-0.4 * x₀ * x₁² * sinh(x₂) * x₃³ * cos(x₄)) +
     // (0.7 * x₀ * x₁ * x₂ * x₃ * x₄)
     const POLY_5V_5T_4: Polynomial<5, 5> = const_poly!({
-        [2.2, [Pow(1), Sqrt, Ln, Sin, Exp]],
-        [-1.8, [Pow(3), Cos, Identity, Tan, Pow(2)]],
-        [1.3, [Cosh, Pow(1), Pow(1), Arctan, Pow(1)]],
-        [-0.4, [Identity, Pow(2), Sinh, Pow(3), Cos]],
-        [0.7, [Pow(1), Pow(1), Pow(1), Pow(1), Pow(1)]]
+        [2.2, Pow(1), Sqrt, Ln, Sin, Exp],
+        [-1.8, Pow(3), Cos, Identity, Tan, Pow(2)],
+        [1.3, Cosh, Pow(1), Pow(1), Arctan, Pow(1)],
+        [-0.4, Identity, Pow(2), Sinh, Pow(3), Cos],
+        [0.7, Pow(1), Pow(1), Pow(1), Pow(1), Pow(1)]
     });
 
     // --- Test 1: 3 variables, 3 terms ---

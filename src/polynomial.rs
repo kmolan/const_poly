@@ -18,7 +18,7 @@ use crate::term::Term;
 /// use const_poly::{const_poly, Polynomial};
 ///
 /// // Create a polynomial, f(x,y) = 3 * sin(x) * cos(y)
-/// const POLY: Polynomial<2, 1> = const_poly!({[3.0, [Sin, Cos]]});
+/// const POLY: Polynomial<2, 1> = const_poly!({[3.0, Sin, Cos]});
 ///
 /// // Evaluate at x = π/2, y = 0 => 3 * sin(π/2) * cos(0) = 3 * 1 * 1 = 3
 /// let result = POLY.evaluate([1.57079632679, 0.0]);
@@ -46,8 +46,8 @@ impl<const NUM_VARIABLES: usize, const NUM_TERMS: usize> Polynomial<NUM_VARIABLE
     /// use const_poly::{const_poly, Polynomial};
     ///
     /// //define polynomial f(x,y) = x*y + 2*Sin(x)*Sin(y)
-    /// const POLY: Polynomial<2, 2> = const_poly!({[1.0, [Identity, Identity]],
-    ///                                             [2.0, [Sin,      Cos]]});
+    /// const POLY: Polynomial<2, 2> = const_poly!({[1.0, Identity, Identity],
+    ///                                             [2.0, Sin,      Cos]});
     /// ```
     pub const fn new(terms: [Term<NUM_VARIABLES>; NUM_TERMS]) -> Self {
         Self { terms }
