@@ -6,7 +6,7 @@
 Evaluate any multivariable equation or polynomial at compile time with high accuracy.
 
 ## Introduction
-`const_poly` is a lightweight, zero-cost abstraction for defining and evaluating multi-variable polynomials entirely at compile time. Instead of writing specialized `const fn` evaluators for every equation you need, `const_poly` abstracts all of this away using generic, compile-time constructs. By combining Rust’s `const fn` with custom macros, `const_poly` allows developers to write complex mathematical expressions in a natural, equation-like syntax:
+`const_poly` is a lightweight, zero-cost abstraction for evaluating multi-variable polynomials entirely at compile time. Instead of writing specialized `const fn` evaluators for every equation you need, `const_poly` abstracts all of this away using generic, compile-time constructs. The generic implementation can handle any number of variables, and is capable of evaluating any arbitrarily complex equation with high accuracy. This approach reduces boilerplate, lets you focus on the actual algorithms, and lets you write math expressions in a natural, equation-like syntax:
 
 ```rust
 use const_poly::VarFunction::*;
@@ -31,17 +31,15 @@ const VARS: [f64; 3] = [2.0, 3.0, 0.5]; // (x,y,z)=(2.0,3.0,0.5)
 const RES: f64 = POLY_3V_5T.evaluate(VARS); // -30.159027778
 ```
 
-Every polynomial defined with `const_poly` is a fully constant object, meaning it can be safely passed, composed, or evaluated anywhere in the codebase in a const context. You can freely pass this object to other `const fn`s or embed it inside larger const data structures.
+Every polynomial defined with `const_poly` is a fully constant object, meaning it can be safely passed, composed, or evaluated anywhere in the codebase in a const context. You can freely pass this object to other `const fn`s, or embed it inside larger const data structures. This results in code that is:
 
-This abstraction allows developers to express mathematical logic naturally, while letting the compiler perform all computations and optimizations ahead of runtime. The result is code that is:
-
-- `no_std` compatible, meaning zero heap allocations and no panics.
-- Full compile-time evaluation of arbitrarily complex equations with high numerical accuracy (benchmarked at 1e-7).
+- `no_std` compatible, with zero heap allocations and no panics.
+- Const evaluable with high numerical accuracy (benchmarked at 1e-7).
 - Intuitive and concise. Write math as math, not as code.
-- Zero runtime issues by letting errors surface at compile time.
+- Free of all runtime issues by letting errors surface at compile time.
 
 ## Who is this for?
- - This library is primarily meant to empower scientific computing and mathematical libraries in rust to perform all numerical approximations entirely at compile time. 
+ - This library is primarily meant to empower scientific computing and mathematical libraries in rust to perform all numerical approximations entirely at compile time or in const contexts. 
 
  - Embedded and no_std environments where heapless, panic-free code is essential.
 
@@ -84,4 +82,5 @@ If you use this library in your project, a shoutout or mention would be awesome!
 -  Add polynomial operations like add/subtract/multiply.
 -  String representation for the polynomial.
 -  Add more benchmarking.
+
 
