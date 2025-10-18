@@ -54,12 +54,20 @@ fn test_cos_approx_polynomial() {
         }
 
         const POLY2: Polynomial<2, 1> = const_poly!([2.0, Cos, Cos]);
-        if !approx_eq(POLY2.evaluate([3.14159265359, 1.57079632679]), 0.0, MAX_ERROR) {
+        if !approx_eq(
+            POLY2.evaluate([3.14159265359, 1.57079632679]),
+            0.0,
+            MAX_ERROR,
+        ) {
             return false;
         }
 
         const POLY3: Polynomial<3, 1> = const_poly!([1.0, Cos, Cos, Cos]);
-        if !approx_eq(POLY3.evaluate([1.0471975512, 0.7853981634, 0.5235987756]), 0.3061862178, MAX_ERROR) {
+        if !approx_eq(
+            POLY3.evaluate([1.0471975512, 0.7853981634, 0.5235987756]),
+            0.3061862178,
+            MAX_ERROR,
+        ) {
             return false;
         }
 
@@ -81,7 +89,11 @@ fn test_exp_approx_polynomial() {
         }
 
         const POLY2: Polynomial<2, 1> = const_poly!([2.0, Exp, Exp]);
-        if !approx_eq(POLY2.evaluate([1.0, 0.0]), 2.0 * 2.718281828459045, MAX_ERROR) {
+        if !approx_eq(
+            POLY2.evaluate([1.0, 0.0]),
+            2.0 * 2.718281828459045,
+            MAX_ERROR,
+        ) {
             return false;
         }
 
@@ -142,7 +154,11 @@ fn test_static_powi_polynomial() {
         }
 
         const POLY3: Polynomial<3, 1> = const_poly!([1.5, Pow(2), Pow(-3), Pow(1)]);
-        if !approx_eq(POLY3.evaluate([-2.0, 3.0, -4.0]), -0.8888888888888888, MAX_ERROR) {
+        if !approx_eq(
+            POLY3.evaluate([-2.0, 3.0, -4.0]),
+            -0.8888888888888888,
+            MAX_ERROR,
+        ) {
             return false;
         }
 
@@ -171,12 +187,20 @@ fn test_ln_approx_polynomial() {
         }
 
         const POLY2: Polynomial<2, 1> = const_poly!([2.0, Ln, Ln]);
-        if !approx_eq(POLY2.evaluate([0.5, 10.0]), 2.0 * LN_HALF * LN_10, MAX_ERROR) {
+        if !approx_eq(
+            POLY2.evaluate([0.5, 10.0]),
+            2.0 * LN_HALF * LN_10,
+            MAX_ERROR,
+        ) {
             return false;
         }
 
         const POLY3: Polynomial<3, 1> = const_poly!([1.5, Ln, Ln, Ln]);
-        if !approx_eq(POLY3.evaluate([1.5, 0.1, 5.0]), 1.5 * LN_1_5 * LN_0_1 * LN_5, MAX_ERROR) {
+        if !approx_eq(
+            POLY3.evaluate([1.5, 0.1, 5.0]),
+            1.5 * LN_1_5 * LN_0_1 * LN_5,
+            MAX_ERROR,
+        ) {
             return false;
         }
 
@@ -237,7 +261,11 @@ fn test_arctan_polynomial() {
         }
 
         const POLY3: Polynomial<3, 1> = const_poly!([1.5, Arctan, Arctan, Arctan]);
-        if !approx_eq(POLY3.evaluate([0.1, -0.7, 3.0]), 1.5 * ATAN_0_1 * ATAN_NEG_0_7 * ATAN_3, MAX_ERROR) {
+        if !approx_eq(
+            POLY3.evaluate([0.1, -0.7, 3.0]),
+            1.5 * ATAN_0_1 * ATAN_NEG_0_7 * ATAN_3,
+            MAX_ERROR,
+        ) {
             return false;
         }
 

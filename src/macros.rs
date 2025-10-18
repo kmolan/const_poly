@@ -45,5 +45,3 @@ macro_rules! const_poly {
         })
     }};
 }
-
-
