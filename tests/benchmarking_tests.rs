@@ -91,7 +91,7 @@ fn benchmarking_tests() {
     let runtime_val_3 = POLY_3V_3T.evaluate(vars_3);
     const COMPILE_VAL_3: f64 = POLY_3V_3T.evaluate([1.0, 2.0, 3.0]);
     assert_approx_eq_with_debug(
-        2.0 * runtime_val_3,
+        runtime_val_3,
         COMPILE_VAL_3,
         1e-12,
         "3V3T runtime vs compile-time",
