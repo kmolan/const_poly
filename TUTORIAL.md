@@ -15,13 +15,6 @@
   - [Power Function Example](#-power-function-example)
 - [Advanced: Multi-Term, Multi-Variable Polynomials](#advanced-multi-term-multi-variable-polynomials)
 
-## Features
-
-- `no_std` compatible – no heap allocations, no panics.
-- Full compile-time evaluation of arbitrarily complex equations with high numerical accuracy (benchmarked at 1e-7).
-- Fully documented with code examples, user-friendly macros, benchmarking, and a comprehensive suite of tests. 
-- Define expressions using variety of mathematical functions, all evaluable at compile time.
-
 ## Installation
 
 Add the crate to your project:
@@ -45,16 +38,16 @@ Here’s how you can define and evaluate a simple polynomial at compile time:
 use const_poly::VarFunction::*;
 use const_poly::{Polynomial, const_poly};
 
-//define f(x,y) = 2.5⋅x²y³
+// f(x,y) = 2.5 * x² * y³
 const POLY = Polynomial<2, 1> = const_poly!([2.5, Pow(2), Pow(3)]);
 
-//evaluate f(x,y) at (x,y)=(10.0, -5.0)
+// evaluate at (x,y) = (10.0, -5.0)
 const RESULT: f64 = POLY_1.evaluate([10.0, -5.0]); // -31250
 
-//Define g(x,y) = 3.0⋅Sin(x)Cos(y)
+// g(x,y) = 3.0 * sin(x) * cos(y)
 const POLY_2: Polynomial<2, 1> = const_poly!([3.0, Sin, Cos]);
 
-//evaluate g(x,y) at (x,y)=(π/2, 0.0)
+// evaluate at (x,y) = (π/2, 0.0)
 const RES_2: f64 = POLY_2.evaluate([1.57079632679, 0.0]); // 3.0
 
 ```
@@ -89,8 +82,8 @@ You can define multi-term polynomials using curly braces `{ ... }`:
 
 ```rust
 const POLY: Polynomial<3, 2> = const_poly!({
-    [1.0, Sin, Cos, Tan],          // 1.0*Sin(x)Cos(y)Tan(z)
-    [2.5, Pow(2), Pow(3), Pow(-1)] // 2.5*x²y³z⁻¹
+    [1.0, Sin, Cos, Tan],          // 1.0 * sin(x) * cos(y) * tan(z)
+    [2.5, Pow(2), Pow(3), Pow(-1)] // 2.5 * x² * y³ * z⁻¹
 });
 ```
 
@@ -163,7 +156,7 @@ const POLY_3V_5T: Polynomial<3, 5> = const_poly!({
     [0.9, Pow(1), Pow(2), Pow(-1)]   // 0.9 * x¹ * y² * z⁻¹
 });
 
-const VARS: [f64; 3] = [2.0, 3.0, 0.5]; // (x,y,z)=(2.0,3.0,0.5)
+const VARS: [f64; 3] = [2.0, 3.0, 0.5]; // (x,y,z) = (2.0,3.0,0.5)
 const RES: f64 = POLY_3V_5T.evaluate(VARS); // -30.159027778
 
 
@@ -174,7 +167,7 @@ const POLY_3V_3T: Polynomial<3, 3> = const_poly!({
         [0.5, Exp, Ln, Sqrt]           // 0.5 * e^x * ln(y) * sqrt(z)
     });
 
-const VARS_2 = [1.0, 2.0, 3.0]; // (x,y,z)=(1.0,2.0,3.0)
+const VARS_2 = [1.0, 2.0, 3.0]; // (x,y,z) = (1.0,2.0,3.0)
 const RES_2: f64 = POLY_3V_3T.evaluate(VARS_2); //-1.583055539077
 ```
 
