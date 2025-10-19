@@ -3,20 +3,23 @@
 ![github](https://github.com/kmolan/const_poly/actions/workflows/build-tests.yml/badge.svg)
 ![github](https://github.com/kmolan/const_poly/actions/workflows/code-coverage.yml/badge.svg)
 
-Evaluate any multivariable equation or polynomial at compile time with high accuracy.
+- Define and evaluate any multivariable polynomial or equation at compile time.
+- Handle any number of variables and function types (Pow, Sin, Exp, Ln, etc.) with a single abstraction that is always const-safe.
+- Zero Dependencies and `no_std`, ensuring no heap allocations, no panics, and no external crates.
+- Helps reduce boilerplate so you don't have to keep defining custom `const fn` for each equation.
 
 ## Introduction
-`const_poly` is a lightweight, zero-cost abstraction for evaluating multi-variable polynomials entirely at compile time. Instead of writing specialized `const fn` evaluators for every equation you need, `const_poly` abstracts all of this away using generic, compile-time constructs. The generic implementation can handle any number of variables, and is capable of evaluating any arbitrarily complex equation with high accuracy. This approach reduces boilerplate, lets you focus on the actual algorithms, and lets you write math expressions in a natural, equation-like syntax:
+`const_poly` is a lightweight abstraction for evaluating multi-variable polynomials entirely at compile time. Instead of writing specialized `const fn` evaluators for every equation you need, `const_poly` abstracts all of this away using generic, compile-time constructs. The implementation can handle any number of variables, and is capable of evaluating any complex equation with high accuracy. This approach reduces boilerplate, so you can focus on the actual algorithms while writing math expressions in a natural, equation-like syntax:
 
 ```rust
 use const_poly::VarFunction::*;
 use const_poly::{Polynomial, const_poly};
 
-// Define f(x, y) = 3 * sin(x) * cos(y)
-const POLY: Polynomial<2, 1> = const_poly!({ [3.0, Sin, Cos] });
+//define f(x,y) = 2.5 * x² * y³
+const POLY = Polynomial<2, 1> = const_poly!([2.5, Pow(2), Pow(3)]);
 
-// Evaluate at compile time
-const RESULT: f64 = POLY.evaluate([1.57079632679, 0.0]); // 3.0
+//evaluate f(x,y) at (x,y) = (10.0, -5.0)
+const RESULT: f64 = POLY_1.evaluate([10.0, -5.0]); // -31250.0
 
 // Multi-term polynomial g(x,y,z)
 const POLY_3V_5T: Polynomial<3, 5> = const_poly!({
@@ -27,16 +30,12 @@ const POLY_3V_5T: Polynomial<3, 5> = const_poly!({
     [0.9, Pow(1), Pow(2), Pow(-1)]   // 0.9 * x¹ * y² * z⁻¹
 });
 
-const VARS: [f64; 3] = [2.0, 3.0, 0.5]; // (x,y,z)=(2.0,3.0,0.5)
+// (x,y,z) = (2.0,3.0,0.5)
+const VARS: [f64; 3] = [2.0, 3.0, 0.5]; 
 const RES: f64 = POLY_3V_5T.evaluate(VARS); // -30.159027778
 ```
 
-Every polynomial defined with `const_poly` is a fully constant object, meaning it can be safely passed, composed, or evaluated anywhere in the codebase in a const context. You can freely pass this object to other `const fn`s, or embed it inside larger const data structures. This results in code that is:
-
-- `no_std` compatible, with zero heap allocations and no panics.
-- Const evaluable with high numerical accuracy (benchmarked at 1e-7).
-- Intuitive and concise. Write math as math, not as code.
-- Free of all runtime issues by letting errors surface at compile time.
+Every polynomial defined with `const_poly` is a fully constant object, meaning it can be safely passed, composed, or evaluated anywhere in the codebase in a const context. You can freely pass this object to other `const fn`, or embed it inside larger data structures. `const_poly` has zero dependencies and is written completely in a `no_std` environment.
 
 ## Who is this for?
  - This library is primarily meant to empower scientific computing and mathematical libraries in rust to perform all numerical approximations entirely at compile time or in const contexts. 
@@ -45,21 +44,53 @@ Every polynomial defined with `const_poly` is a fully constant object, meaning i
 
  - Metaprogramming and symbolic math tools that benefit from evaluating complex expressions entirely at compile time.
 
-## Installation
+## More code examples
 
-Add the crate to your project:
+### 1. Simple polynomial
+```rust
+//define f(x) = 3 * x²
+const POLY: Polynomial<1, 1> = const_poly!([3.0, Pow(2)]);
 
-```bash
-cargo add const_poly
+const RESULT: f64 = POLY.evaluate([4.0]); // 3 * (4^2) = 48.0
+``` 
+
+### 2. Trigonometric Functions
+```rust
+// define f(x, y) = 2.0 * Sin(x) * Cos(y)
+const POLY: Polynomial<2, 1> = const_poly!([2.0, Sin, Cos]);
+const RESULT: f64 = POLY.evaluate([1.57079632679, 0.0]); // 2.0 * sin(π/2) * cos(0) = 2.0
 ```
 
-or manually in your `Cargo.toml`:
+### 3. Multi-Term Mixed Polynomial
+```rust
+const POLY: Polynomial<2, 3> = const_poly!({
+    [1.0, Pow(2), Pow(1)],   // 1.0 * x² * y
+    [0.5, Sin, Cos],         // 0.5 * sin(x) * cos(y)
+    [-2.0, Exp, Pow(-1)]     // -2.0 * e^(x) * y⁻¹
+});
 
-```toml
-[dependencies]
-const_poly = "0.0.3"
+const RESULT: f64 = POLY.evaluate([1.0, 2.0]); // -0.2182818
 ```
 
+### 4. Logarithmic and Root Operations
+```rust
+// f(x, y) = 1.5 * ln(x) * sqrt(y)
+const POLY: Polynomial<2, 1> = const_poly!([1.5, Ln, Sqrt]);
+const RESULT: f64 = POLY.evaluate([2.0, 9.0]); // 3.119162312
+```
+
+### 5. Full Expression with Multiple Terms & Complex Functions
+```rust
+const POLY: Polynomial<3, 4> = const_poly!({
+    [2.0, Pow(2), Sin, Exp],       // 2x² * sin(y) * e^(z)
+    [-1.5, Ln, Pow(-1), Cos],      // -1.5 * ln(x) * y⁻¹ * cos(z)
+    [0.5, Sqrt, Tan, Pow(0)],      // 0.5 * sqrt(x) * tan(y)
+    [1.0, Pow(1), Pow(1), Pow(1)]  // x * y * z
+});
+
+const VARS: [f64; 3] = [2.0, 0.5, 1.0];
+const RESULT: f64 = POLY.evaluate(VARS); // 10.688476972
+```
 
 ## Tutorials
 Follow the full tutorial at [TUTORIAL.md](https://github.com/kmolan/const_poly/blob/main/TUTORIAL.md)
