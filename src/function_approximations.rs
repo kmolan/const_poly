@@ -19,13 +19,48 @@ const TAN_NEG_INFINITY: f64 = -1e12;
 // Newton-Raphson iteration count for sqrt
 const SQRT_NR_ITERATIONS: usize = 20;
 
+macro_rules! env_default {
+    ($env:expr, $default: expr) => {
+        match option_env!($env) {
+            Some(v) => to_u64(v) as usize,
+            None => $default,
+        }
+    };
+}
+
 // Taylor expansion term counts
-const ATAN_TAYLOR_TERMS: usize = 30;
-const SINH_TAYLOR_TERMS: usize = 30;
-const COSH_TAYLOR_TERMS: usize = 30;
-const LN_SERIES_TERMS: usize = 39;
+pub const SIN_TAYLOR_TERMS: usize = env_default!("SIN_TAYLOR_TERMS", 14);
+pub const COS_TAYLOR_TERMS: usize = env_default!("COS_TAYLOR_TERMS", 15);
+pub const EXP_TAYLOR_TERMS: usize = env_default!("EXP_TAYLOR_TERMS", 20);
+pub const ATAN_TAYLOR_TERMS: usize = env_default!("ATAN_TAYLOR_TERMS", 30);
+pub const SINH_TAYLOR_TERMS: usize = env_default!("SINH_TAYLOR_TERMS", 30);
+pub const COSH_TAYLOR_TERMS: usize = env_default!("COSH_TAYLOR_TERMS", 30);
+pub const LN_SERIES_TERMS: usize = env_default!("LN_SERIES_TERMS", 39);
 
 // ========================================
+
+/// Const time parse value
+const fn to_u64(s: &str) -> u64 {
+    let mut res = 0;
+    let mut i = 0;
+    while i < s.len() {
+        let b = s.as_bytes()[i];
+        if b'0'  < b || b > b'9'{
+            panic!("Error parse byte");
+        }
+        res = 10 * res + (b - b'0') as u64;
+        i += 1;
+    }
+    res
+}
+
+/// Computes the factorial
+const fn factorial(x: u64) -> u64 {
+    match x {
+        0 | 1 => 1,
+        x => factorial(x - 1) * x,
+    }
+}
 
 /// Computes the absolute value of a floating-point number.
 const fn abs(x: f64) -> f64 {
@@ -59,27 +94,17 @@ const fn reduce_angle_for_sine(mut x: f64) -> f64 {
 /// Accurate to within **1e-9** compared to f64::sin() over the range [-2π, 2π].
 pub const fn sin_approx(x: f64) -> f64 {
     let x = reduce_angle_for_sine(x);
-    let x2 = x * x;
 
-    // Compute powers and coefficients explicitly
-    let x3 = x * x2; // x³
-    let x5 = x3 * x2; // x⁵
-    let x7 = x5 * x2; // x⁷
-    let x9 = x7 * x2; // x⁹
-    let x11 = x9 * x2; // x¹¹
-    let x13 = x11 * x2; // x¹³
+    let mut sign = -1;
+    let mut term = x;
+    let mut power = 3;
+    while power < SIN_TAYLOR_TERMS {
+        term += sign as f64 * (static_powi(x, power as i32) / factorial(power as u64) as f64);
+        power += 2;
+        sign *= -1;
+    }
 
-    // Precomputed factorial denominators
-    let term1 = x;
-    let term2 = x3 / 6.0; // 3!
-    let term3 = x5 / 120.0; // 5!
-    let term4 = x7 / 5040.0; // 7!
-    let term5 = x9 / 362880.0; // 9!
-    let term6 = x11 / 39916800.0; // 11!
-    let term7 = x13 / 6227020800.0; // 13!
-
-    // Alternating signs
-    term1 - term2 + term3 - term4 + term5 - term6 + term7
+    term
 }
 
 /// Reduces the input `x` to the range [-π/2, π/2] using symmetry of cosine.
@@ -109,28 +134,17 @@ const fn reduce_angle_for_cos(mut x: f64) -> (f64, f64) {
 /// Accurate to within **1e-9** compared to f64::cos() over the range [-2π, 2π].
 pub const fn cos_approx(x: f64) -> f64 {
     let (x, sign) = reduce_angle_for_cos(x);
-    let x2 = x * x;
 
-    // Compute powers of x² (since cosine only uses even powers)
-    let x4 = x2 * x2; // x⁴
-    let x6 = x4 * x2; // x⁶
-    let x8 = x6 * x2; // x⁸
-    let x10 = x8 * x2; // x¹⁰
-    let x12 = x10 * x2; // x¹²
-    let x14 = x12 * x2; // x¹⁴
+    let mut term = 1.0;
+    let mut sign_l = -1;
+    let mut power = 2;
+    while power < COS_TAYLOR_TERMS {
+        term += sign_l as f64 * (static_powi(x, power as i32) / factorial(power as u64) as f64);
+        power += 2;
+        sign_l *= -1;
+    }
 
-    // Precomputed factorial denominators
-    let term0 = 1.0;
-    let term1 = x2 / 2.0; // 2!
-    let term2 = x4 / 24.0; // 4!
-    let term3 = x6 / 720.0; // 6!
-    let term4 = x8 / 40320.0; // 8!
-    let term5 = x10 / 3628800.0; // 10!
-    let term6 = x12 / 479001600.0; // 12!
-    let term7 = x14 / 87178291200.0; // 14!
-
-    // Alternating signs
-    sign * (term0 - term1 + term2 - term3 + term4 - term5 + term6 - term7)
+    sign * term
 }
 
 /// Rounds a floating-point number to the nearest integer as a `f64` in compile time.
@@ -164,45 +178,13 @@ pub const fn exp_approx(x: f64) -> f64 {
     // Since const fn can't use loops with mutable vars well in stable,
     // unroll manually:
 
-    let r2 = r * r;
-    let r3 = r2 * r;
-    let r4 = r3 * r;
-    let r5 = r4 * r;
-    let r6 = r5 * r;
-    let r7 = r6 * r;
-    let r8 = r7 * r;
-    let r9 = r8 * r;
-    let r10 = r9 * r;
-    let r11 = r10 * r;
-    let r12 = r11 * r;
-    let r13 = r12 * r;
-    let r14 = r13 * r;
-    let r15 = r14 * r;
-    let r16 = r15 * r;
-    let r17 = r16 * r;
-    let r18 = r17 * r;
-    let r19 = r18 * r;
+    let mut taylor = 1.0;
+    let mut power = 1;
+    while power < EXP_TAYLOR_TERMS {
+        taylor += static_powi(r, power as i32) / factorial(power as u64) as f64;
 
-    let taylor = 1.0
-        + r
-        + r2 / 2.0
-        + r3 / 6.0
-        + r4 / 24.0
-        + r5 / 120.0
-        + r6 / 720.0
-        + r7 / 5040.0
-        + r8 / 40320.0
-        + r9 / 362880.0
-        + r10 / 3628800.0
-        + r11 / 39916800.0
-        + r12 / 479001600.0
-        + r13 / 6227020800.0
-        + r14 / 87178291200.0
-        + r15 / 1307674368000.0
-        + r16 / 20922789888000.0
-        + r17 / 355687428096000.0
-        + r18 / 6402373705728000.0
-        + r19 / 121645100408832000.0;
+        power += 1;
+    }
 
     static_powi(2.0, n) * taylor
 }
@@ -393,4 +375,163 @@ pub const fn cosh_approx(x: f64) -> f64 {
     }
 
     sum
+}
+
+#[cfg(test)]
+mod test {
+    use crate::function_approximations::*;
+
+    #[test]
+    fn factorial_test() {
+        const ORIG: &[(u64, u64)] = &[
+            (3, 6),
+            (5, 120),
+            (7, 5040),
+            (9, 362880),
+            (11, 39916800),
+            (13, 6227020800),
+        ];
+
+        for (x, y) in ORIG {
+            assert_eq!(factorial(*x), *y)
+        }
+    }
+
+    #[test]
+    fn update_sin_approx_test() {
+        const VALUES: &[f64] = &[0.0, 1.0, -0.0, -1.0, -3124.311, 1235.13];
+
+        let orig = |x: f64| {
+            let x = reduce_angle_for_sine(x);
+            let x2 = x * x;
+
+            // Compute powers and coefficients explicitly
+            let x3 = x * x2; // x³
+            let x5 = x3 * x2; // x⁵
+            let x7 = x5 * x2; // x⁷
+            let x9 = x7 * x2; // x⁹
+            let x11 = x9 * x2; // x¹¹
+            let x13 = x11 * x2; // x¹³
+
+            // Precomputed factorial denominators
+            let term1 = x;
+            let term2 = x3 / 6.0; // 3!
+            let term3 = x5 / 120.0; // 5!
+            let term4 = x7 / 5040.0; // 7!
+            let term5 = x9 / 362880.0; // 9!
+            let term6 = x11 / 39916800.0; // 11!
+            let term7 = x13 / 6227020800.0; // 13!
+
+            // Alternating signs
+            term1 - term2 + term3 - term4 + term5 - term6 + term7
+        };
+
+        for v in VALUES {
+            assert_eq!(orig(*v), sin_approx(*v), "To: {:}; Std: {}", *v, v.sin());
+        }
+    }
+
+    #[test]
+    fn update_cost_approx_test() {
+        const VALUES: &[f64] = &[0.0, 1.0, -0.0, -1.0, -4712.975, 583.415];
+
+        let orig = |x: f64| {
+            let (x, sign) = reduce_angle_for_cos(x);
+            let x2 = x * x;
+
+            // Compute powers of x² (since cosine only uses even powers)
+            let x4 = x2 * x2; // x⁴
+            let x6 = x4 * x2; // x⁶
+            let x8 = x6 * x2; // x⁸
+            let x10 = x8 * x2; // x¹⁰
+            let x12 = x10 * x2; // x¹²
+            let x14 = x12 * x2; // x¹⁴
+
+            // Precomputed factorial denominators
+            let term0 = 1.0;
+            let term1 = x2 / 2.0; // 2!
+            let term2 = x4 / 24.0; // 4!
+            let term3 = x6 / 720.0; // 6!
+            let term4 = x8 / 40320.0; // 8!
+            let term5 = x10 / 3628800.0; // 10!
+            let term6 = x12 / 479001600.0; // 12!
+            let term7 = x14 / 87178291200.0; // 14!
+
+            // Alternating signs
+            sign * (term0 - term1 + term2 - term3 + term4 - term5 + term6 - term7)
+        };
+
+        for v in VALUES {
+            assert_eq!(orig(*v), cos_approx(*v), "To: {:}; Std: {}", *v, v.cos());
+        }
+    }
+
+    #[test]
+    fn update_exp_approx_test() {
+        const VALUES: &[f64] = &[0.0, 1.0, -0.0, -1.0, 4712.975, -583.415];
+
+        let orig = |x: f64| {
+            const LN_2: f64 = core::f64::consts::LN_2;
+
+            if x == 0.0 {
+                return 1.0;
+            }
+
+            // Compute n = round(x / ln(2))
+            let n_float = round_const(x / LN_2);
+            let n = n_float as i32;
+
+            // Compute remainder r = x - n * ln(2)
+            let r = x - (n_float * LN_2);
+
+            // Since const fn can't use loops with mutable vars well in stable,
+            // unroll manually:
+
+            let r2 = r * r;
+            let r3 = r2 * r;
+            let r4 = r3 * r;
+            let r5 = r4 * r;
+            let r6 = r5 * r;
+            let r7 = r6 * r;
+            let r8 = r7 * r;
+            let r9 = r8 * r;
+            let r10 = r9 * r;
+            let r11 = r10 * r;
+            let r12 = r11 * r;
+            let r13 = r12 * r;
+            let r14 = r13 * r;
+            let r15 = r14 * r;
+            let r16 = r15 * r;
+            let r17 = r16 * r;
+            let r18 = r17 * r;
+            let r19 = r18 * r;
+
+            let taylor = 1.0
+                + r
+                + r2 / 2.0
+                + r3 / 6.0
+                + r4 / 24.0
+                + r5 / 120.0
+                + r6 / 720.0
+                + r7 / 5040.0
+                + r8 / 40320.0
+                + r9 / 362880.0
+                + r10 / 3628800.0
+                + r11 / 39916800.0
+                + r12 / 479001600.0
+                + r13 / 6227020800.0
+                + r14 / 87178291200.0
+                + r15 / 1307674368000.0
+                + r16 / 20922789888000.0
+                + r17 / 355687428096000.0
+                + r18 / 6402373705728000.0
+                + r19 / 121645100408832000.0;
+
+            static_powi(2.0, n) * taylor
+        };
+
+        for v in VALUES {
+            assert_eq!(orig(*v), exp_approx(*v));
+        }
+    }
 }
