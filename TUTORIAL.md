@@ -26,7 +26,7 @@ or manually in your `Cargo.toml`:
 
 ```toml
 [dependencies]
-const_poly = "0.0.3"
+const_poly = "0.0.5"
 ```
 
 ## Quick Start Example
@@ -41,13 +41,13 @@ use const_poly::{Polynomial, const_poly};
 const POLY = Polynomial<2> = const_poly!([2.5, Pow(2), Pow(3)]);
 
 // evaluate at (x,y) = (10.0, -5.0)
-const RESULT: f64 = POLY_1.evaluate([10.0, -5.0]); // -31250
+const RESULT: f64 = POLY_1.evaluate(&[10.0, -5.0]); // -31250
 
 // g(x,y) = 3.0 * sin(x) * cos(y)
 const POLY_2: Polynomial<2> = const_poly!([3.0, Sin, Cos]);
 
 // evaluate at (x,y) = (π/2, 0.0)
-const RES_2: f64 = POLY_2.evaluate([1.57079632679, 0.0]); // 3.0
+const RES_2: f64 = POLY_2.evaluate(&[1.57079632679, 0.0]); // 3.0
 
 ```
 
@@ -85,6 +85,15 @@ const POLY: Polynomial<3> = const_poly!({
 This represents:
 > `f(x,y,z) = 1.0 * Sin(x) * Cos(y) * Tan(z) + 2.5 * x² * y³ * z⁻¹`
 
+You can evaluate any polynomial using the `evaluate` function call:
+
+```rust
+// Assume we define a polynomial f(x, y, z).
+const VARS = [1.0, 2.0, 3.0] // We wish to evaluate this polynomial at (x,y,z) = (1,2,3)
+
+const result = POLY.evaluate(&VARS); // Get result at compile time by passing a reference to desired variables
+```
+
 ---
 
 ### 2. Supported Functions
@@ -108,7 +117,7 @@ This represents:
 
 ```rust
 const POLY: Polynomial<1> = const_poly!([3.0, Sin]);
-const RES: f64 = POLY.evaluate([1.57079632679]); // 3*sin(π/2)
+const RES: f64 = POLY.evaluate(&[1.57079632679]); // 3*sin(π/2)
 assert!((RES - 3.0).abs() < 1e-6);
 ```
 
@@ -116,7 +125,7 @@ assert!((RES - 3.0).abs() < 1e-6);
 
 ```rust
 const POLY: Polynomial<2> = const_poly!([2.0, Cos, Cos]);
-const RES: f64 = POLY.evaluate([3.14159265359, 1.57079632679]); // 2*cos(π)*cos(π/2)
+const RES: f64 = POLY.evaluate(&[3.14159265359, 1.57079632679]); // 2*cos(π)*cos(π/2)
 assert!((RES - 0.0).abs() < 1e-6);
 ```
 
@@ -124,7 +133,7 @@ assert!((RES - 0.0).abs() < 1e-6);
 
 ```rust
 const POLY: Polynomial<2> = const_poly!([2.0, Exp, Exp]);
-const RES: f64 = POLY.evaluate([1.0, 0.0]); // 2 * e^1 * e^0
+const RES: f64 = POLY.evaluate(&[1.0, 0.0]); // 2 * e^1 * e^0
 assert!((RES - 2.0 * 2.718281828459045).abs() < 1e-3);
 ```
 
@@ -132,7 +141,7 @@ assert!((RES - 2.0 * 2.718281828459045).abs() < 1e-3);
 
 ```rust
 const POLY: Polynomial<3> = const_poly!([1.5, Pow(2), Pow(-3), Pow(1)]);
-const RES: f64 = POLY.evaluate([-2.0, 3.0, -4.0]);
+const RES: f64 = POLY.evaluate(&[-2.0, 3.0, -4.0]);
 // 1.5 * (-2)^2 * (3)^-3 * (-4)^1
 assert!((RES - -0.8888888888888888).abs() < 1e-50);
 ```
@@ -151,7 +160,7 @@ const POLY_1: Polynomial<3> = const_poly!({
 });
 
 const VARS: [f64; 3] = [2.0, 3.0, 0.5]; // (x,y,z) = (2.0,3.0,0.5)
-const RES: f64 = POLY_1.evaluate(VARS); // -30.159027778
+const RES: f64 = POLY_1.evaluate(&VARS); // -30.159027778
 
 
 const POLY_2: Polynomial<3> = const_poly!({
@@ -161,7 +170,7 @@ const POLY_2: Polynomial<3> = const_poly!({
     });
 
 const VARS_2 = [1.0, 2.0, 3.0]; // (x,y,z) = (1.0,2.0,3.0)
-const RES_2: f64 = POLY_2.evaluate(VARS_2); //-1.583055539077
+const RES_2: f64 = POLY_2.evaluate(&VARS_2); //-1.583055539077
 ```
 
 ## Further Reading

@@ -93,10 +93,10 @@ impl<const NUM_VARIABLES: usize> Term<NUM_VARIABLES> {
     /// ```
     /// use const_poly::{Term, VarFunction::*};
     /// const TERM: Term<1> = Term::new(2.0, [Sin]);
-    /// const val: f64 = TERM.evaluate([1.57079632679]); // Approx sin(pi/2)
+    /// const val: f64 = TERM.evaluate(&[1.57079632679]); // Approx sin(pi/2)
     /// assert!((val - 2.0).abs() < 1e-6);
     /// ```
-    pub const fn evaluate(&self, vars: [f64; NUM_VARIABLES]) -> f64 {
+    pub const fn evaluate(&self, vars: &[f64; NUM_VARIABLES]) -> f64 {
         let mut result = self.coeff;
         let mut i = 0;
 

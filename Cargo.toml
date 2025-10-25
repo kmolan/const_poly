@@ -1,6 +1,6 @@
 [package]
 name = "const_poly"
-version = "0.0.4"
+version = "0.0.5"
 authors = ["akathail <anmolkathail@gmail.com>"]
 edition = "2024"
 description = "Evaluate any multivariable equation or polynomial at compile time with high accuracy and zero runtime overhead."

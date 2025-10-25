@@ -19,7 +19,7 @@ use crate::term::Term;
 /// const POLY: Polynomial<2> = const_poly!({[3.0, Sin, Cos]});
 ///
 /// // Evaluate at x = π/2, y = 0 => 3 * sin(π/2) * cos(0) = 3 * 1 * 1 = 3
-/// let result = POLY.evaluate([1.57079632679, 0.0]);
+/// let result = POLY.evaluate(&[1.57079632679, 0.0]);
 /// assert!((result - 3.0).abs() < 1e-6);
 /// ```
 pub struct Polynomial<const NUM_VARIABLES: usize> {
@@ -62,7 +62,7 @@ impl<const NUM_VARIABLES: usize> Polynomial<NUM_VARIABLES> {
     /// # Returns
     ///
     /// The floating-point result of evaluating the polynomial.
-    pub const fn evaluate(&self, vars: [f64; NUM_VARIABLES]) -> f64 {
+    pub const fn evaluate(&self, vars: &[f64; NUM_VARIABLES]) -> f64 {
         let mut sum = 0.0;
         let mut i = 0;
 
@@ -71,5 +71,26 @@ impl<const NUM_VARIABLES: usize> Polynomial<NUM_VARIABLES> {
             i += 1;
         }
         sum
+    }
+}
+
+/// --- Special case: Single-variable ---
+impl Polynomial<1> {
+    /// Allows direct evaluation using a single `f64` value instead of an array.
+    ///
+    /// # Example
+    /// ```
+    /// use const_poly::VarFunction::*;
+    /// use const_poly::{const_poly, Polynomial};
+    ///
+    /// // f(x) = 2 * sin(x)
+    /// const POLY: Polynomial<1> = const_poly!([2.0, Sin]);
+    ///
+    /// // Evaluate directly with a single float
+    /// let result = POLY.evaluate_scalar(1.57079632679); // ≈ 2.0
+    /// assert!((result - 2.0).abs() < 1e-6);
+    /// ```
+    pub const fn evaluate_scalar(&self, x: f64) -> f64 {
+        self.evaluate(&[x])
     }
 }

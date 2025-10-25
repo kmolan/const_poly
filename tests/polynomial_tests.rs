@@ -13,25 +13,25 @@ fn test_sin_approx_polynomial() {
 
     const fn inner() -> bool {
         const POLY1: Polynomial<1> = const_poly!([3.0, Sin]);
-        const RES1: f64 = POLY1.evaluate([1.57079632679]);
+        const RES1: f64 = POLY1.evaluate(&[1.57079632679]);
         if !approx_eq(RES1, 3.0, MAX_ERROR) {
             return false;
         }
 
         const POLY2: Polynomial<2> = const_poly!([2.0, Sin, Sin]);
-        const RES2: f64 = POLY2.evaluate([0.0, 1.57079632679]);
+        const RES2: f64 = POLY2.evaluate(&[0.0, 1.57079632679]);
         if !approx_eq(RES2, 0.0, MAX_ERROR) {
             return false;
         }
 
         const POLY3: Polynomial<3> = const_poly!([1.0, Sin, Sin, Sin]);
-        const RES3: f64 = POLY3.evaluate([0.5235987756, 1.0471975512, 0.0]);
+        const RES3: f64 = POLY3.evaluate(&[0.5235987756, 1.0471975512, 0.0]);
         if !approx_eq(RES3, 0.0, MAX_ERROR) {
             return false;
         }
 
         const POLY4: Polynomial<3> = const_poly!([1.0, Sin, Sin, Sin]);
-        const RES4: f64 = POLY4.evaluate([0.5235987756, 1.0471975512, 1.57079632679]);
+        const RES4: f64 = POLY4.evaluate(&[0.5235987756, 1.0471975512, 1.57079632679]);
         if !approx_eq(RES4, 0.43301270189, MAX_ERROR) {
             return false;
         }
@@ -49,13 +49,13 @@ fn test_cos_approx_polynomial() {
 
     const fn inner() -> bool {
         const POLY1: Polynomial<1> = const_poly!([5.0, Cos]);
-        if !approx_eq(POLY1.evaluate([0.0]), 5.0, MAX_ERROR) {
+        if !approx_eq(POLY1.evaluate(&[0.0]), 5.0, MAX_ERROR) {
             return false;
         }
 
         const POLY2: Polynomial<2> = const_poly!([2.0, Cos, Cos]);
         if !approx_eq(
-            POLY2.evaluate([3.14159265359, 1.57079632679]),
+            POLY2.evaluate(&[3.14159265359, 1.57079632679]),
             0.0,
             MAX_ERROR,
         ) {
@@ -64,7 +64,7 @@ fn test_cos_approx_polynomial() {
 
         const POLY3: Polynomial<3> = const_poly!([1.0, Cos, Cos, Cos]);
         if !approx_eq(
-            POLY3.evaluate([1.0471975512, 0.7853981634, 0.5235987756]),
+            POLY3.evaluate(&[1.0471975512, 0.7853981634, 0.5235987756]),
             0.3061862178,
             MAX_ERROR,
         ) {
@@ -84,13 +84,13 @@ fn test_exp_approx_polynomial() {
 
     const fn inner() -> bool {
         const POLY1: Polynomial<1> = const_poly!([1.5, Exp]);
-        if !approx_eq(POLY1.evaluate([0.0]), 1.5, MAX_ERROR) {
+        if !approx_eq(POLY1.evaluate(&[0.0]), 1.5, MAX_ERROR) {
             return false;
         }
 
         const POLY2: Polynomial<2> = const_poly!([2.0, Exp, Exp]);
         if !approx_eq(
-            POLY2.evaluate([1.0, 0.0]),
+            POLY2.evaluate(&[1.0, 0.0]),
             2.0 * 2.718281828459045,
             MAX_ERROR,
         ) {
@@ -99,7 +99,7 @@ fn test_exp_approx_polynomial() {
 
         const POLY3: Polynomial<3> = const_poly!([1.2, Exp, Exp, Exp]);
         const EXPECTED3: f64 = 0.9822577906240841;
-        if !approx_eq(POLY3.evaluate([0.5, -1.0, 0.3]), EXPECTED3, MAX_ERROR) {
+        if !approx_eq(POLY3.evaluate(&[0.5, -1.0, 0.3]), EXPECTED3, MAX_ERROR) {
             return false;
         }
 
@@ -116,18 +116,18 @@ fn test_tan_approx_polynomial() {
 
     const fn inner() -> bool {
         const POLY1: Polynomial<1> = const_poly!([3.0, Tan]);
-        if !approx_eq(POLY1.evaluate([0.0]), 0.0, MAX_ERROR) {
+        if !approx_eq(POLY1.evaluate(&[0.0]), 0.0, MAX_ERROR) {
             return false;
         }
 
         const POLY2: Polynomial<2> = const_poly!([2.0, Tan, Tan]);
-        if !approx_eq(POLY2.evaluate([0.78539816339, 0.0]), 0.0, MAX_ERROR) {
+        if !approx_eq(POLY2.evaluate(&[0.78539816339, 0.0]), 0.0, MAX_ERROR) {
             return false;
         }
 
         const POLY3: Polynomial<3> = const_poly!([1.5, Tan, Tan, Tan]);
         const EXPECTED3: f64 = 1.5 * 0.309336 * 0.422793 * 0.546302;
-        if !approx_eq(POLY3.evaluate([0.3, 0.4, 0.5]), EXPECTED3, MAX_ERROR) {
+        if !approx_eq(POLY3.evaluate(&[0.3, 0.4, 0.5]), EXPECTED3, MAX_ERROR) {
             return false;
         }
 
@@ -144,18 +144,18 @@ fn test_static_powi_polynomial() {
 
     const fn inner() -> bool {
         const POLY1: Polynomial<1> = const_poly!([1.0, Pow(3)]);
-        if !approx_eq(POLY1.evaluate([2.0]), 8.0, MAX_ERROR) {
+        if !approx_eq(POLY1.evaluate(&[2.0]), 8.0, MAX_ERROR) {
             return false;
         }
 
         const POLY2: Polynomial<2> = const_poly!([3.0, Pow(1), Pow(2)]);
-        if !approx_eq(POLY2.evaluate([2.0, 3.0]), 54.0, MAX_ERROR) {
+        if !approx_eq(POLY2.evaluate(&[2.0, 3.0]), 54.0, MAX_ERROR) {
             return false;
         }
 
         const POLY3: Polynomial<3> = const_poly!([1.5, Pow(2), Pow(-3), Pow(1)]);
         if !approx_eq(
-            POLY3.evaluate([-2.0, 3.0, -4.0]),
+            POLY3.evaluate(&[-2.0, 3.0, -4.0]),
             -0.8888888888888888,
             MAX_ERROR,
         ) {
@@ -182,13 +182,13 @@ fn test_ln_approx_polynomial() {
 
     const fn inner() -> bool {
         const POLY1: Polynomial<1> = const_poly!([3.0, Ln]);
-        if !approx_eq(POLY1.evaluate([2.0]), 3.0 * LN_2, MAX_ERROR) {
+        if !approx_eq(POLY1.evaluate(&[2.0]), 3.0 * LN_2, MAX_ERROR) {
             return false;
         }
 
         const POLY2: Polynomial<2> = const_poly!([2.0, Ln, Ln]);
         if !approx_eq(
-            POLY2.evaluate([0.5, 10.0]),
+            POLY2.evaluate(&[0.5, 10.0]),
             2.0 * LN_HALF * LN_10,
             MAX_ERROR,
         ) {
@@ -197,7 +197,7 @@ fn test_ln_approx_polynomial() {
 
         const POLY3: Polynomial<3> = const_poly!([1.5, Ln, Ln, Ln]);
         if !approx_eq(
-            POLY3.evaluate([1.5, 0.1, 5.0]),
+            POLY3.evaluate(&[1.5, 0.1, 5.0]),
             1.5 * LN_1_5 * LN_0_1 * LN_5,
             MAX_ERROR,
         ) {
@@ -217,17 +217,17 @@ fn test_sqrt_polynomial() {
 
     const fn inner() -> bool {
         const TERM1: Polynomial<1> = const_poly!([1.0, Sqrt]);
-        if !approx_eq(TERM1.evaluate([4.0]), 2.0, MAX_ERROR) {
+        if !approx_eq(TERM1.evaluate(&[4.0]), 2.0, MAX_ERROR) {
             return false;
         }
 
         const TERM2: Polynomial<1> = const_poly!([2.0, Sqrt]);
-        if !approx_eq(TERM2.evaluate([0.0]), 0.0, MAX_ERROR) {
+        if !approx_eq(TERM2.evaluate(&[0.0]), 0.0, MAX_ERROR) {
             return false;
         }
 
         const TERM3: Polynomial<3> = const_poly!([1.5, Sqrt, Sqrt, Sqrt]);
-        if !approx_eq(TERM3.evaluate([9.0, 16.0, 25.0]), 90.0, MAX_ERROR) {
+        if !approx_eq(TERM3.evaluate(&[9.0, 16.0, 25.0]), 90.0, MAX_ERROR) {
             return false;
         }
 
@@ -251,18 +251,22 @@ fn test_arctan_polynomial() {
 
     const fn inner() -> bool {
         const POLY1: Polynomial<1> = const_poly!([4.0, Arctan]);
-        if !approx_eq(POLY1.evaluate([0.5]), 4.0 * ATAN_0_5, MAX_ERROR) {
+        if !approx_eq(POLY1.evaluate(&[0.5]), 4.0 * ATAN_0_5, MAX_ERROR) {
             return false;
         }
 
         const POLY2: Polynomial<2> = const_poly!([2.0, Arctan, Arctan]);
-        if !approx_eq(POLY2.evaluate([1.0, 2.0]), 2.0 * ATAN_1 * ATAN_2, MAX_ERROR) {
+        if !approx_eq(
+            POLY2.evaluate(&[1.0, 2.0]),
+            2.0 * ATAN_1 * ATAN_2,
+            MAX_ERROR,
+        ) {
             return false;
         }
 
         const POLY3: Polynomial<3> = const_poly!([1.5, Arctan, Arctan, Arctan]);
         if !approx_eq(
-            POLY3.evaluate([0.1, -0.7, 3.0]),
+            POLY3.evaluate(&[0.1, -0.7, 3.0]),
             1.5 * ATAN_0_1 * ATAN_NEG_0_7 * ATAN_3,
             MAX_ERROR,
         ) {
@@ -282,12 +286,12 @@ fn test_sinh_polynomial() {
 
     const fn inner() -> bool {
         const POLY1: Polynomial<1> = const_poly!([1.0, Sinh]);
-        if !approx_eq(POLY1.evaluate([0.0]), 0.0, MAX_ERROR) {
+        if !approx_eq(POLY1.evaluate(&[0.0]), 0.0, MAX_ERROR) {
             return false;
         }
 
         const POLY2: Polynomial<1> = const_poly!([2.0, Sinh]);
-        if !approx_eq(POLY2.evaluate([1.0]), 2.35040238728, MAX_ERROR) {
+        if !approx_eq(POLY2.evaluate(&[1.0]), 2.35040238728, MAX_ERROR) {
             return false;
         }
 
@@ -304,12 +308,12 @@ fn test_cosh_polynomial() {
 
     const fn inner() -> bool {
         const POLY1: Polynomial<1> = const_poly!([1.0, Cosh]);
-        if !approx_eq(POLY1.evaluate([0.0]), 1.0, MAX_ERROR) {
+        if !approx_eq(POLY1.evaluate(&[0.0]), 1.0, MAX_ERROR) {
             return false;
         }
 
         const POLY2: Polynomial<1> = const_poly!([3.0, Cosh]);
-        if !approx_eq(POLY2.evaluate([1.0]), 4.62924190446, MAX_ERROR) {
+        if !approx_eq(POLY2.evaluate(&[1.0]), 4.62924190446, MAX_ERROR) {
             return false;
         }
 
@@ -338,7 +342,7 @@ fn test_polynomial_all_pow_functions() {
     const EXPECTED_RESULT: f64 = -30.159027778;
 
     const fn inner() -> bool {
-        let res = POLY.evaluate(VARS);
+        let res = POLY.evaluate(&VARS);
         approx_eq(res, EXPECTED_RESULT, MAX_ERROR)
     }
 

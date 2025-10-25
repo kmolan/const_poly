@@ -88,8 +88,8 @@ fn benchmarking_tests() {
 
     // --- Test 1: 3 variables, 3 terms ---
     let vars_3 = [1.0_f64, 2.0, 3.0];
-    let runtime_val_3 = POLY_3V_3T.evaluate(vars_3);
-    const COMPILE_VAL_3: f64 = POLY_3V_3T.evaluate([1.0, 2.0, 3.0]);
+    let runtime_val_3 = POLY_3V_3T.evaluate(&vars_3);
+    const COMPILE_VAL_3: f64 = POLY_3V_3T.evaluate(&[1.0, 2.0, 3.0]);
     assert_approx_eq_with_debug(
         runtime_val_3,
         COMPILE_VAL_3,
@@ -104,8 +104,8 @@ fn benchmarking_tests() {
 
     // --- Test 2: 4 variables, 4 terms ---
     let vars_4 = [0.5_f64, 1.5, 2.5, 3.5];
-    let runtime_val_4 = POLY_4V_4T.evaluate(vars_4);
-    const COMPILE_VAL_4: f64 = POLY_4V_4T.evaluate([0.5, 1.5, 2.5, 3.5]);
+    let runtime_val_4 = POLY_4V_4T.evaluate(&vars_4);
+    const COMPILE_VAL_4: f64 = POLY_4V_4T.evaluate(&[0.5, 1.5, 2.5, 3.5]);
     assert_approx_eq_with_debug(
         runtime_val_4,
         COMPILE_VAL_4,
@@ -121,8 +121,8 @@ fn benchmarking_tests() {
 
     // --- Test 3: 5 variables, 5 terms ---
     let vars_5 = [0.1_f64, 1.2, 2.3, 3.4, 4.5];
-    let runtime_val_5 = POLY_5V_5T.evaluate(vars_5);
-    const COMPILE_VAL_5: f64 = POLY_5V_5T.evaluate([0.1, 1.2, 2.3, 3.4, 4.5]);
+    let runtime_val_5 = POLY_5V_5T.evaluate(&vars_5);
+    const COMPILE_VAL_5: f64 = POLY_5V_5T.evaluate(&[0.1, 1.2, 2.3, 3.4, 4.5]);
     assert_approx_eq_with_debug(
         runtime_val_5,
         COMPILE_VAL_5,
@@ -150,8 +150,8 @@ fn benchmarking_tests() {
     assert_approx_eq_with_debug(runtime_val_5, expected_5, 1e-12, "5V5T runtime vs expected");
 
     let vars_5_2 = [0.9_f64, 1.1, 1.3, 1.5, 1.7];
-    let runtime_val_5_2 = POLY_5V_5T_2.evaluate(vars_5_2);
-    const COMPILE_VAL_5_2: f64 = POLY_5V_5T_2.evaluate([0.9, 1.1, 1.3, 1.5, 1.7]);
+    let runtime_val_5_2 = POLY_5V_5T_2.evaluate(&vars_5_2);
+    const COMPILE_VAL_5_2: f64 = POLY_5V_5T_2.evaluate(&[0.9, 1.1, 1.3, 1.5, 1.7]);
     assert_approx_eq_with_debug(
         runtime_val_5_2,
         COMPILE_VAL_5_2,
@@ -192,8 +192,8 @@ fn benchmarking_tests() {
     );
 
     let vars_5_3 = [1.2_f64, 1.4, 1.6, 1.8, 2.0];
-    let runtime_val_5_3 = POLY_5V_5T_3.evaluate(vars_5_3);
-    const COMPILE_VAL_5_3: f64 = POLY_5V_5T_3.evaluate([1.2, 1.4, 1.6, 1.8, 2.0]);
+    let runtime_val_5_3 = POLY_5V_5T_3.evaluate(&vars_5_3);
+    const COMPILE_VAL_5_3: f64 = POLY_5V_5T_3.evaluate(&[1.2, 1.4, 1.6, 1.8, 2.0]);
     assert_approx_eq_with_debug(
         runtime_val_5_3,
         COMPILE_VAL_5_3,
@@ -234,8 +234,8 @@ fn benchmarking_tests() {
     );
 
     let vars_5_4 = [0.8_f64, 1.0, 1.2, 1.4, 1.6];
-    let runtime_val_5_4 = POLY_5V_5T_4.evaluate(vars_5_4);
-    const COMPILE_VAL_5_4: f64 = POLY_5V_5T_4.evaluate([0.8, 1.0, 1.2, 1.4, 1.6]);
+    let runtime_val_5_4 = POLY_5V_5T_4.evaluate(&vars_5_4);
+    const COMPILE_VAL_5_4: f64 = POLY_5V_5T_4.evaluate(&[0.8, 1.0, 1.2, 1.4, 1.6]);
     assert_approx_eq_with_debug(
         runtime_val_5_4,
         COMPILE_VAL_5_4,
