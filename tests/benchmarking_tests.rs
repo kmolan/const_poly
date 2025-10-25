@@ -17,7 +17,7 @@ fn benchmarking_tests() {
     // (1.5 * sin(x₀) * x₁ * x₂²) +
     // (-2.0 * cos(x₀) * x₁³ * x₂) +
     // (0.5 * exp(x₀) * ln(x₁) * sqrt(x₂))
-    const POLY_3V_3T: Polynomial<3, 3> = const_poly!({
+    const POLY_3V_3T: Polynomial<3> = const_poly!({
         [1.5, Sin, Identity, Pow(2)],
         [-2.0, Cos, Pow(3), Identity],
         [0.5, Exp, Ln, Sqrt]
@@ -27,7 +27,7 @@ fn benchmarking_tests() {
     // (-1.2 * x₀³ * tan(x₁) * exp(x₂) * x₃) +
     // (0.7 * ln(x₀) * sqrt(x₁) * atan(x₂) * sinh(x₃)) +
     // (1.1 * cosh(x₀) * x₁ * x₂ * sin(x₃))
-    const POLY_4V_4T: Polynomial<4, 4> = const_poly!({
+    const POLY_4V_4T: Polynomial<4> = const_poly!({
         [3.0, Identity, Sin, Pow(2), Cos],
         [-1.2, Pow(3), Tan, Exp, Identity],
         [0.7, Ln, Sqrt, Arctan, Sinh],
@@ -39,7 +39,7 @@ fn benchmarking_tests() {
     // (1.7 * atan(x₀) * sinh(x₁) * cosh(x₂) * x₃ * x₄) +
     // (0.9 * x₀ * x₁ * x₂ * x₃ * x₄) +
     // (-0.5 * x₀ * x₁ * x₂ * x₃ * x₄)
-    const POLY_5V_5T: Polynomial<5, 5> = const_poly!({
+    const POLY_5V_5T: Polynomial<5> = const_poly!({
         [2.0, Sin, Cos, Pow(2), Identity, Ln],
         [-3.3, Exp, Pow(3), Tan, Sqrt, Identity],
         [1.7, Arctan, Sinh, Cosh, Identity, Pow(1)],
@@ -52,7 +52,7 @@ fn benchmarking_tests() {
     // (0.8 * tan(x₀) * atan(x₁) * sinh(x₂) * x₃² * x₄) +
     // (-0.7 * x₀ * ln(x₁) * cos(x₂) * x₃ * exp(x₄)) +
     // (1.5 * x₀ * x₁ * x₂ * x₃ * x₄)
-    const POLY_5V_5T_2: Polynomial<5, 5> = const_poly!({
+    const POLY_5V_5T_2: Polynomial<5> = const_poly!({
         [1.1, Cos, Exp, Pow(1), Ln, Sqrt],
         [-2.2, Pow(2), Sin, Identity, Cosh, Pow(3)],
         [0.8, Tan, Arctan, Sinh, Pow(2), Identity],
@@ -65,7 +65,7 @@ fn benchmarking_tests() {
     // (-0.9 * atan(x₀) * x₁ * x₂² * tan(x₃) * sqrt(x₄)) +
     // (1.0 * x₀ * x₁ * x₂ * x₃ * x₄) +
     // (-0.6 * x₀ * cos(x₁) * exp(x₂) * x₃³ * sin(x₄))
-    const POLY_5V_5T_3: Polynomial<5, 5> = const_poly!({
+    const POLY_5V_5T_3: Polynomial<5> = const_poly!({
         [-1.3, Sinh, Pow(3), Identity, Ln, Cos],
         [2.4, Exp, Pow(1), Sin, Cosh, Pow(2)],
         [-0.9, Arctan, Identity, Pow(2), Tan, Sqrt],
@@ -78,7 +78,7 @@ fn benchmarking_tests() {
     // (1.3 * cosh(x₀) * x₁ * x₂ * atan(x₃) * x₄) +
     // (-0.4 * x₀ * x₁² * sinh(x₂) * x₃³ * cos(x₄)) +
     // (0.7 * x₀ * x₁ * x₂ * x₃ * x₄)
-    const POLY_5V_5T_4: Polynomial<5, 5> = const_poly!({
+    const POLY_5V_5T_4: Polynomial<5> = const_poly!({
         [2.2, Pow(1), Sqrt, Ln, Sin, Exp],
         [-1.8, Pow(3), Cos, Identity, Tan, Pow(2)],
         [1.3, Cosh, Pow(1), Pow(1), Arctan, Pow(1)],
